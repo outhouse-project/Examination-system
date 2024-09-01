@@ -1,0 +1,7 @@
+<div class="video-grid">
+    <video *ngIf="localStream" [srcObject]="localStream" autoplay [muted]="true" playsinline></video>
+    <video *ngFor="let stream of remoteStreams" [srcObject]="stream" autoplay playsinline></video>
+</div>
+
+<app-chat></app-chat>
+<app-controls [stream]="localStream" [socket]="socket"></app-controls>
