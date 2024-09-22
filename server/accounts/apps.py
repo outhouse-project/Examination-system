@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class VideoExamConfig(AppConfig):
+class AccountsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'video_exam'
+    name = 'accounts'
