@@ -1,6 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+
+class CustomUserManager(UserManager):
+    def create_superuser(self, **extra_fields):
+        extra_fields.setdefault('role', 'super_admin')
+        return super().create_superuser(**extra_fields)
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
@@ -13,7 +18,8 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=15)
     last_name = models.CharField(max_length=15)
     phone_number=None
-    REQUIRED_FIELDS = ['role', 'email', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    objects = CustomUserManager()
 
     def save(self, *args, **kwargs):
         self.full_clean()
