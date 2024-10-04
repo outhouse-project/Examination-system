@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-controls',
@@ -14,7 +14,7 @@ export class ControlsComponent {
   isVideoEnabled: boolean = true;
   isAudioEnabled: boolean = true;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private route: ActivatedRoute) { }
 
   toggleVideo() {
     this.isVideoEnabled = !this.isVideoEnabled;
@@ -28,6 +28,6 @@ export class ControlsComponent {
 
   leaveRoom() {
     this.socket.close();
-    this.router.navigate(['/video-exam']);
+    this.router.navigate(['..'], { relativeTo: this.route });
   }
 }

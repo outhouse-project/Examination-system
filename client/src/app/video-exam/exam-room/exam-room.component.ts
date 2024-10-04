@@ -3,10 +3,10 @@ import Peer, { MediaConnection } from 'peerjs';
 import { CommonModule } from '@angular/common';
 import { ChatComponent } from '../chat/chat.component';
 import { ControlsComponent } from '../controls/controls.component';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-video-call',
+  selector: 'app-exam-room',
   standalone: true,
   imports: [CommonModule, ChatComponent, ControlsComponent],
   templateUrl: './exam-room.component.html',
@@ -45,7 +45,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
   }
 
   setupSocket() {
-    this.socket = new WebSocket(environment.baseURL.replace(/^https?/, 'ws') + 'ws/call/');
+    this.socket = new WebSocket(environment.baseURL.replace(/^http/, 'ws') + 'ws/call/');
     this.socket.onopen = () => {
       console.log('WebSocket connection established');
       this.socket.onmessage = (message) => {

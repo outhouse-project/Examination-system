@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-exams',
@@ -10,10 +10,10 @@ import { Router, RouterOutlet } from '@angular/router';
 })
 export class ExamsComponent {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private route: ActivatedRoute) { }
 
   joinRoom(roomId: string) {
     if (roomId.trim() === '') return;
-    this.router.navigate(['/video-exam', roomId]);
+    this.router.navigate([roomId], { relativeTo: this.route });
   }
 }

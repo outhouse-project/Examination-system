@@ -72,6 +72,13 @@ LOGOUT_REDIRECT_URL = '/accounts/logout/'
 ROOT_URLCONF = 'exam_sys.urls'
 
 CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:4200').split(',')
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+    'access-control-allow-credentials',
+]
 
 TEMPLATES = [
     {

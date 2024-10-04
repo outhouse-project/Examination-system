@@ -103,7 +103,14 @@ def login_user(request):
             authenticated_user = authenticate(username=user.username, password=password)
             if authenticated_user:
                 login(request, authenticated_user)
-                return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+                user_data = {
+                    'username': authenticated_user.username,
+                    'email': authenticated_user.email,
+                    'first_name': authenticated_user.first_name,
+                    'last_name': authenticated_user.last_name,
+                    'role': authenticated_user.role
+                }
+                return Response({'message': 'Login successful', 'user': user_data}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         else:
@@ -129,6 +136,20 @@ def change_password(request):
     user.save()
 
     return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
+
+# User View
+@api_view(['GET'])
+@login_required
+def get_user(request):
+    user = request.user
+    user_data = {
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'role': user.role
+    }
+    return Response({'user': user_data}, status=status.HTTP_200_OK)
 
 # Logout View
 @api_view(['GET'])
