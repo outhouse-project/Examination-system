@@ -52,8 +52,8 @@ export class LoginComponent implements OnInit {
           this.authService.user.set(user);
           this.routeToDashboard(user.role);
         },
-        error: (error: any) => {
-          this.errorMessage = error.message;
+        error: (err: any) => {
+          this.errorMessage = err.error.error;
         }
       });
     }

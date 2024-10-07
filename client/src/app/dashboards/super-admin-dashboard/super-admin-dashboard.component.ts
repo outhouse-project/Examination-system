@@ -31,16 +31,15 @@ export class SuperAdminDashboardComponent {
 
   onCreateCollegeAdmin() {
     if (this.collegeAdminForm.valid) {
-      this.http.post(environment.baseURL + 'accounts/create-college-admin', this.collegeAdminForm.value).subscribe({
+      this.http.post<any>(environment.baseURL + 'accounts/create-college-admin/', this.collegeAdminForm.value).subscribe({
         next: (response) => {
-          alert('College admin created successfully!');
           this.showCollegeAdminForm = false;
           this.createdUserDetails = this.collegeAdminForm.value;
+          this.createdUserDetails.username = response.username;
           this.collegeAdminForm.reset();
         },
         error: (err) => {
           alert('Error: ' + err.message);
-          console.log(err);
         },
       });
     }
