@@ -11,8 +11,15 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Video container */
+.video-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
 /* Video elements */
-.video-grid video {
+.video-container video {
     width: 100%;
     height: auto;
     border-radius: 8px;
@@ -20,33 +27,22 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Overlay for the name display */
+.overlay {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
 /* Video hover effect */
-.video-grid video:hover {
+.video-container video:hover {
     border-color: #4caf50;
     transform: scale(1.02);
     transition: transform 0.3s ease, border-color 0.3s ease;
 }
-
-/* Chat component styling */
-app-chat {
-    display: block;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 15px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
-}
-
-/* Controls component styling */
-app-controls {
-    display: flex;
-    justify-content: center;
-    margin: 20px auto;
-    padding: 15px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-

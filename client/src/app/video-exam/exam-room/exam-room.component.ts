@@ -4,6 +4,14 @@ import { CommonModule } from '@angular/common';
 import { ChatComponent } from '../chat/chat.component';
 import { ControlsComponent } from '../controls/controls.component';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../auth/auth.service';
+
+interface RemoteStreamInfo {
+  stream: MediaStream;
+  firstName: string;
+  lastName: string;
+  peerId: string;
+}
 
 @Component({
   selector: 'app-exam-room',
@@ -16,12 +24,11 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
   peer: Peer;
   peerId!: string;
   @Input() roomId = '';
-  remoteStreams: MediaStream[] = [];
-  calls: Map<string, MediaConnection> = new Map();
+  remoteStreams: RemoteStreamInfo[] = [];
   localStream!: MediaStream;
   socket!: WebSocket;
 
-  constructor() {
+  constructor(private authService: AuthService) {
     this.peer = new Peer();
   }
 
@@ -52,33 +59,36 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         const data = JSON.parse(message.data);
         if (data['type'] === 'user_connected') {
           const call = this.peer.call(data['peerId'], this.localStream);
-          this.addStream(call);
+          this.addStream(call, data['firstName'], data['lastName']);
         } else if (data['type'] === 'user_disconnected') {
-          this.calls.get(data['peerId'])?.close();
+          this.deleteStream(data['peerId']);
         }
       }
       const event = {
         type: 'join-room',
         peerId: this.peerId,
-        roomId: this.roomId
+        roomId: this.roomId,
+        firstName: this.authService.user()?.first_name,
+        lastName: this.authService.user()?.last_name
       };
       this.socket.send(JSON.stringify(event));
     };
   }
 
-  addStream(call: MediaConnection) {
+  addStream(call: MediaConnection, firstName = '', lastName = '') {
     call.once('stream', remoteStream => {
-      this.remoteStreams.push(remoteStream);
-      this.onDiconnect(call, remoteStream);
+      const remoteStreamInfo: RemoteStreamInfo = {
+        stream: remoteStream,
+        firstName: firstName,
+        lastName: lastName,
+        peerId: call.peer,
+      };
+      this.remoteStreams.push(remoteStreamInfo);
     });
-    this.calls.set(call.peer, call);
   }
 
-  onDiconnect(call: MediaConnection, stream: MediaStream) {
-    call.on('close', () => {
-      this.remoteStreams = this.remoteStreams.filter((remoteStream) => remoteStream.id !== stream.id);
-      this.calls.delete(call.peer);
-    });
+  deleteStream(peer: string) {
+    this.remoteStreams = this.remoteStreams.filter(streamInfo => streamInfo.peerId !== peer);
   }
 
   ngOnDestroy() {

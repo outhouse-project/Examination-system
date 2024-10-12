@@ -27,7 +27,9 @@ class CallConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(self.group_name,
                 {
                     'type': 'user_joined',
-                    'peerId': self.peer_id
+                    'peerId': self.peer_id,
+                    'firstName': data['firstName'],
+                    'lastName': data['lastName']
                 }
             )
 
@@ -41,7 +43,9 @@ class CallConsumer(AsyncWebsocketConsumer):
         # Broadcast the "user joined" message to all in the room
         await self.send(text_data=json.dumps({
             'type': 'user_connected',
-            'peerId': data['peerId']
+            'peerId': data['peerId'],
+            'firstName': data['firstName'],
+            'lastName': data['lastName']
         }))
 
     async def user_disconnected(self, data):

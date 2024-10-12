@@ -1,6 +1,12 @@
 <div class="video-grid">
-    <video *ngIf="localStream" [srcObject]="localStream" autoplay [muted]="true" playsinline></video>
-    <video *ngFor="let stream of remoteStreams" [srcObject]="stream" autoplay playsinline></video>
+    <div *ngIf="localStream" class="video-container">
+        <video [srcObject]="localStream" autoplay [muted]="true" playsinline></video>
+        <div class="overlay">You</div>
+    </div>
+    <div *ngFor="let remoteStreamInfo of remoteStreams" class="video-container">
+        <video [srcObject]="remoteStreamInfo.stream" autoplay playsinline></video>
+        <div class="overlay">{{ remoteStreamInfo.firstName }} {{ remoteStreamInfo.lastName }}</div>
+    </div>
 </div>
 
 <app-chat></app-chat>

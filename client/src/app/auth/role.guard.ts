@@ -1,25 +1,23 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleGuard implements CanActivate {
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const user = this.authService.user();
-
-    if (!user) {
-      return this.router.createUrlTree(['/login']);
-    }
-
-    const expectedRole = route.data['role'] as string;
-
-    if (user.role === expectedRole) {
-      return true;
-    }
-    return false;
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return this.authService.fetchUser().pipe(
+      map((user) => {
+        if (user?.role && state.url.startsWith(`/${user.role.slice(0, 5)}`)) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    );
   }
 }

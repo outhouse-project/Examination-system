@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
@@ -13,7 +13,7 @@ import { AuthService } from '../auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   loginForm: FormGroup;
   errorMessage = '';
 
@@ -28,19 +28,7 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required],
       role: ['', Validators.required]
     });
-  }
-
-  ngOnInit(): void {
-    this.http.get(environment.baseURL + 'accounts/user/').subscribe({
-      next: (response: any) => {
-        const user = response.user;
-        this.authService.user.set(user);
-        this.routeToDashboard(user.role);
-      },
-      error: (error: any) => {
-        this.authService.user.set(null);
-      }
-    });
+    this.routeToDashboard(this.authService.user()?.role);
   }
 
   onSubmit(): void {
@@ -59,7 +47,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  routeToDashboard(role: string) {
+  routeToDashboard(role = '') {
     if (role === 'super_admin') {
       this.router.navigate(['/super-admin']);
     } else if (role === 'college_admin') {

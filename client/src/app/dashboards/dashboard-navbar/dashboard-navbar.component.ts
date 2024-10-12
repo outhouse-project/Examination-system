@@ -30,7 +30,9 @@ export class DashboardNavbarComponent {
     });
     this.changePasswordForm = this.fb.group({
       old_password: ['', Validators.required],
-      new_password: ['', [Validators.required, Validators.minLength(6)]],
+      new_password: ['', [Validators.required,
+        //  Validators.minLength(6)
+      ]],
       confirm_password: ['', Validators.required]
     }, { validators: this.passwordsMatchValidator });
   }
@@ -61,6 +63,7 @@ export class DashboardNavbarComponent {
           alert('Password changed successfully!');
           this.closeChangePasswordModal();
           this.changePasswordForm.reset();
+          window.location.reload();
         },
         error: (err) => {
           alert('Error: ' + err.error.error || err.message);

@@ -7,24 +7,25 @@ import { CollegeAdminDashboardComponent } from './dashboards/college-admin-dashb
 import { StudentDashboardComponent } from './dashboards/student-dashboard/student-dashboard.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { RoleGuard } from './auth/role.guard';
+import { authResolver } from './auth/auth.resolver';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
-    { path: 'login', component: LoginComponent },
+    { path: 'login', resolve: { user: authResolver }, component: LoginComponent },
     {
-        path: 'super-admin', data: { role: 'super_admin' }, canActivate: [RoleGuard], children: [
+        path: 'super-admin', canActivate: [RoleGuard], children: [
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
             { path: 'dashboard', component: SuperAdminDashboardComponent }
         ]
     },
     {
-        path: 'college-admin', data: { role: 'college_admin' }, canActivate: [RoleGuard], children: [
+        path: 'college-admin', canActivate: [RoleGuard], children: [
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
             { path: 'dashboard', component: CollegeAdminDashboardComponent }
         ]
     },
     {
-        path: 'student', data: { role: 'student' }, canActivate: [RoleGuard], children: [
+        path: 'student', canActivate: [RoleGuard], children: [
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
             { path: 'dashboard', component: StudentDashboardComponent },
             { path: 'video-exam', component: ExamsComponent },
