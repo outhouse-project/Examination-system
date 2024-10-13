@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import Peer, { MediaConnection } from 'peerjs';
 import { CommonModule } from '@angular/common';
 import { ChatComponent } from '../chat/chat.component';
@@ -22,14 +22,14 @@ interface RemoteStreamInfo {
 })
 export class ExamRoomComponent implements OnInit, OnDestroy {
   peer: Peer;
-  peerId!: string;
   @Input() roomId = '';
   remoteStreams: RemoteStreamInfo[] = [];
   localStream!: MediaStream;
   socket!: WebSocket;
+  @ViewChild(ChatComponent) chatComponent!: ChatComponent;
 
   constructor(private authService: AuthService) {
-    this.peer = new Peer();
+    this.peer = new Peer(this.authService.user()?.username!);
   }
 
   ngOnInit() {
@@ -38,14 +38,17 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
 
   setupPeer() {
     this.peer.on('open', id => {
-      this.peerId = id;
-      console.log('Peer ID: ', id);
+      console.log('Peer ID: ', this.peer.id);
       navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
         this.localStream = stream;
       });
       this.peer.on('call', call => {
-        call.answer(this.localStream);
-        this.addStream(call);
+        this.peer.on('connection', (conn) => {
+          conn.on('data', (data: any) => {
+            call.answer(this.localStream);
+            this.addStream(call, data['firstName'], data['lastName']);
+          });
+        });
       });
       this.setupSocket();
     });
@@ -60,18 +63,27 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         if (data['type'] === 'user_connected') {
           const call = this.peer.call(data['peerId'], this.localStream);
           this.addStream(call, data['firstName'], data['lastName']);
+
+          const conn = this.peer.connect(data['peerId']);
+          conn.on('open', () => {
+            conn.send({
+              firstName: this.authService.user()?.first_name,
+              lastName: this.authService.user()?.last_name
+            });
+          });
         } else if (data['type'] === 'user_disconnected') {
           this.deleteStream(data['peerId']);
+        } else if (data['type'] === 'chat_message') {
+          this.chatComponent.onMessageReceived(data['peerId'], data['sender'], data['content']);
         }
       }
-      const event = {
+      this.socket.send(JSON.stringify({
         type: 'join-room',
-        peerId: this.peerId,
+        peerId: this.peer.id,
         roomId: this.roomId,
         firstName: this.authService.user()?.first_name,
         lastName: this.authService.user()?.last_name
-      };
-      this.socket.send(JSON.stringify(event));
+      }));
     };
   }
 
@@ -89,6 +101,10 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
 
   deleteStream(peer: string) {
     this.remoteStreams = this.remoteStreams.filter(streamInfo => streamInfo.peerId !== peer);
+  }
+
+  trackRemoteStream(index: number, remoteStream: RemoteStreamInfo) {
+    return remoteStream.peerId;
   }
 
   ngOnDestroy() {

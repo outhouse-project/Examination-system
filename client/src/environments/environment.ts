@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    baseURL: ""
+    baseURL: "https://examination-system-backend.onrender.com/"
 };

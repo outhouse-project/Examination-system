@@ -3,11 +3,11 @@
         <video [srcObject]="localStream" autoplay [muted]="true" playsinline></video>
         <div class="overlay">You</div>
     </div>
-    <div *ngFor="let remoteStreamInfo of remoteStreams" class="video-container">
+    <div *ngFor="let remoteStreamInfo of remoteStreams; trackBy: trackRemoteStream" class="video-container">
         <video [srcObject]="remoteStreamInfo.stream" autoplay playsinline></video>
         <div class="overlay">{{ remoteStreamInfo.firstName }} {{ remoteStreamInfo.lastName }}</div>
     </div>
 </div>
 
-<app-chat></app-chat>
+<app-chat [peer]="peer" [socket]="socket"></app-chat>
 <app-controls [stream]="localStream" [socket]="socket"></app-controls>

@@ -32,12 +32,15 @@ class CallConsumer(AsyncWebsocketConsumer):
                     'lastName': data['lastName']
                 }
             )
-
             await self.channel_layer.group_add(self.group_name, self.channel_name)
-        # await self.channel_layer.group_send(self.group_name, {
-        #     'type': 'chat_message',
-        #     'message': message
-        # })
+        
+        elif event_type=='chat':
+            await self.channel_layer.group_send(self.group_name, {
+                'type': 'chat_message',
+                'peerId': data['peerId'],
+                'sender': data['sender'],
+                'content': data['content']
+            })
 
     async def user_joined(self, data):
         # Broadcast the "user joined" message to all in the room
@@ -55,4 +58,9 @@ class CallConsumer(AsyncWebsocketConsumer):
         }))
 
     async def chat_message(self, data):
-        await self.send(text_data=json.dumps({'message': data['message']}))
+        await self.send(text_data=json.dumps({
+            'type': 'chat_message',
+            'peerId': data['peerId'],
+            'sender': data['sender'],
+            'content': data['content']
+        }))
