@@ -1,0 +1,45 @@
+/* Sidebar Styling */
+.sidebar {
+    height: 100vh;
+    width: 0;
+    background-color: #333;
+    overflow-x: hidden;
+    transition: 0.3s;
+    margin-right: 4px;
+}
+
+.sidebar.active {
+    width: 250px;
+    border-top: 1px solid gray;
+}
+
+.sidebar a {
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #f1f1f1;
+    display: block;
+    border: 1px solid gray;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sidebar a:hover {
+    background-color: #646464;
+}
+
+.active-link {
+    background-color: #565656;
+}
+
+/* Toggle Button Styling */
+.sidebar-toggle {
+    font-size: 24px;
+    background-color: transparent;
+    color: red;
+    border: 1px solid gray;
+    cursor: pointer;
+    position: absolute;
+    top: 8px;
+    margin-right: 30px;
+}

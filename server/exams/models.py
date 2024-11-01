@@ -31,3 +31,20 @@ class Result(models.Model):
 class StudentResponse(models.Model):
     of_student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='responses')
     selected_option = models.ForeignKey(Option, on_delete=models.CASCADE, related_name='selected_for_responses')
+
+class ProctoringAlert(models.Model):
+    ALERT_TYPE_CHOICES = (
+        ('face_absent', 'Face Not Detected'),
+        ('multiple_faces', 'Multiple Faces Detected'),
+        ('mobile_use', 'Mobile Use Detected'),
+        ('suspicious_movement', 'Suspicious Movement Detected'),
+        ('screen_change', 'Screen Activity Detected'),
+    )
+    alert_type = models.CharField(max_length=20, choices=ALERT_TYPE_CHOICES)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    of_exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='proctoring_alerts')
+    of_student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='proctoring_alerts')
+    description = models.TextField(null=True, blank=True)  # Additional details about the event
+
+    class Meta:
+        ordering = ['timestamp']

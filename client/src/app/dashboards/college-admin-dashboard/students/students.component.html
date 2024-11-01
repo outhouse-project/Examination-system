@@ -1,0 +1,46 @@
+<!-- Students Table -->
+<h3>Students</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let student of students">
+            <td>{{ student.username }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.first_name }}</td>
+            <td>{{ student.last_name }}</td>
+        </tr>
+    </tbody>
+</table>
+<!-- Button to open form for creating Student -->
+<button (click)="openStudentForm()">Create Student</button>
+
+<!-- Form for creating Student -->
+<form *ngIf="showStudentForm" [formGroup]="studentForm" (ngSubmit)="onCreateStudent()">
+    <label for="first_name">First Name</label>
+    <input id="first_name" formControlName="first_name" type="text" required />
+
+    <label for="last_name">Last Name</label>
+    <input id="last_name" formControlName="last_name" type="text" required />
+
+    <label for="email">Email</label>
+    <input id="email" formControlName="email" type="email" required />
+
+    <button type="submit">Create</button>
+</form>
+
+<!-- Display created user details -->
+<div *ngIf="createdUserDetails">
+    <h4>Student Created Successfully</h4>
+    <p><strong>Username:</strong> {{ createdUserDetails.username }}</p>
+    <p><strong>Email:</strong> {{ createdUserDetails.email }}</p>
+    <p><strong>First Name:</strong> {{ createdUserDetails.first_name }}</p>
+    <p><strong>Last Name:</strong> {{ createdUserDetails.last_name }}</p>
+    <p><strong>Password:</strong> Same as Username</p>
+</div>

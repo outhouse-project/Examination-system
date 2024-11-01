@@ -1,0 +1,7 @@
+<button class="sidebar-toggle" (click)="toggleSidebar()">&#9776;</button>
+<div class="sidebar" [class.active]="isSidebarOpen">
+    <a *ngFor="let option of sidebarMenu" routerLink="{{option.path}}" routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{exact: true}">
+        {{ option.label }}
+    </a>
+</div>

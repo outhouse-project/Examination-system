@@ -151,6 +151,50 @@ def get_user(request):
     }
     return Response({'user': user_data}, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@login_required
+def get_college_admins(request):
+    user = request.user
+    if user.role != 'super_admin':
+        return Response({'error': 'Permission denied. Only super admins can access this information.'}, status=status.HTTP_403_FORBIDDEN)
+
+    try:
+        # Retrieve all college admins
+        college_admins = CollegeAdmin.objects.all()
+        college_admin_data = [
+            {
+                'username': admin.user.username,
+                'email': admin.user.email,
+                'first_name': admin.user.first_name,
+                'last_name': admin.user.last_name
+            } for admin in college_admins
+        ]
+        return Response({'college_admins': college_admin_data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@login_required
+def get_students(request):
+    user = request.user
+    if user.role != 'college_admin':
+        return Response({'error': 'Permission denied. Only college admins can access this information.'}, status=status.HTTP_403_FORBIDDEN)
+
+    try:
+        # Retrieve the students associated with the logged-in college admin
+        students = user.college_admin_profile.students.all()
+        student_data = [
+            {
+                'username': student.user.username,
+                'email': student.user.email,
+                'first_name': student.user.first_name,
+                'last_name': student.user.last_name
+            } for student in students
+        ]
+        return Response({'students': student_data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 # Logout View
 @api_view(['GET'])
 @login_required
