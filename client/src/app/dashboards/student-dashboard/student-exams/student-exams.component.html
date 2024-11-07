@@ -1,2 +1,14 @@
-<h3>Exams</h3>
-<button routerLink="/student/video-exam">Give video exam</button>
+<div class="exam-list">
+    <h2>Upcoming Exams</h2>
+    <ul>
+        <li *ngFor="let exam of exams">
+            <div class="exam-item">
+                <span class="exam-title">{{ exam.title }}</span>
+                <span class="exam-time">Scheduled at: {{ exam.scheduled_at | date:'short' }}</span>
+                <button (click)="startExam(exam.id)" [disabled]="!canStartExam(exam.scheduled_at)" class="start-button">
+                    Start
+                </button>
+            </div>
+        </li>
+    </ul>
+</div>

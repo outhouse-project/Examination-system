@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { ExamRoomComponent } from './video-exam/exam-room/exam-room.component';
-import { ExamsComponent } from './exams/exams.component';
 import { LoginComponent } from './auth/login/login.component';
 import { SuperAdminDashboardComponent } from './dashboards/super-admin-dashboard/super-admin-dashboard.component';
 import { CollegeAdminDashboardComponent } from './dashboards/college-admin-dashboard/college-admin-dashboard.component';
@@ -16,6 +15,7 @@ import { CollegeAdminExamsComponent } from './dashboards/college-admin-dashboard
 import { StudentDefaultComponent } from './dashboards/student-dashboard/student-default/student-default.component';
 import { StudentExamsComponent } from './dashboards/student-dashboard/student-exams/student-exams.component';
 import { StudentResultsComponent } from './dashboards/student-dashboard/student-results/student-results.component';
+import { CreateExamComponent } from './create-exam/create-exam.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -40,7 +40,8 @@ export const routes: Routes = [
                     { path: 'students', component: StudentsComponent },
                     { path: 'exams', component: CollegeAdminExamsComponent },
                 ]
-            }
+            },
+            { path: 'create-exam', component: CreateExamComponent },
         ]
     },
     {
@@ -53,7 +54,6 @@ export const routes: Routes = [
                     { path: 'results', component: StudentResultsComponent },
                 ]
             },
-            { path: 'video-exam', component: ExamsComponent },
             { path: 'video-exam/:roomId', component: ExamRoomComponent }
         ]
     },

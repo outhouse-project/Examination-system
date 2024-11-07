@@ -109,5 +109,6 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.socket.close();
+    this.peer.disconnect();
   }
 }

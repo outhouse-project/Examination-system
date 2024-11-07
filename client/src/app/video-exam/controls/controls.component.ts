@@ -28,6 +28,6 @@ export class ControlsComponent {
 
   leaveRoom() {
     this.socket.close();
-    this.router.navigate(['..'], { relativeTo: this.route });
+    this.router.navigate(['../../'], { relativeTo: this.route });
   }
 }

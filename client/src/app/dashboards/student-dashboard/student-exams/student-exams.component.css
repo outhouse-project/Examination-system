@@ -1,0 +1,28 @@
+.exam-list {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.exam-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.exam-title {
+    font-weight: bold;
+}
+
+.start-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.start-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}

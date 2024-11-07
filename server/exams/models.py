@@ -11,8 +11,11 @@ class Exam(models.Model):
     instructions = models.TextField()
     scheduled_at = models.DateTimeField()
     duration_in_minutes = models.PositiveIntegerField()
-    is_AIproctored = models.BooleanField(default=False) 
+    is_AI_proctored = models.BooleanField(default=False) 
     created_by = models.ForeignKey(CollegeAdmin, on_delete=models.CASCADE, related_name='created_exams')
+
+    class Meta:
+        ordering = ['-scheduled_at']
 
 class Question(models.Model):
     question = models.TextField()
@@ -27,6 +30,12 @@ class Result(models.Model):
     score=models.IntegerField()
     of_exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='results')
     of_student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='results')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['of_exam', 'of_student'], name='unique_exam_student')
+        ]
+        ordering = ['-of_exam__scheduled_at']
 
 class StudentResponse(models.Model):
     of_student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='responses')

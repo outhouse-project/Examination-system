@@ -1,0 +1,23 @@
+.create-exam-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+
+.success-message {
+    color: green;
+    margin-top: 1rem;
+}
+
+.error-message {
+    color: red;
+    margin-top: 1rem;
+}

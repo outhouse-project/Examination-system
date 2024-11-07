@@ -1,0 +1,63 @@
+<div class="create-exam-container">
+    <h2>Create a New Exam</h2>
+
+    <form [formGroup]="createExamForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="exam_type">Exam Type</label>
+            <select id="exam_type" formControlName="exam_type" class="form-control">
+                <option *ngFor="let type of examTypes" [value]="type.value">{{ type.label }}</option>
+            </select>
+            <div *ngIf="createExamForm.get('exam_type')?.invalid && createExamForm.get('exam_type')?.touched"
+                class="error">
+                Exam type is required.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" formControlName="title" class="form-control" maxlength="30" />
+            <div *ngIf="createExamForm.get('title')?.invalid && createExamForm.get('title')?.touched" class="error">
+                Title is required and must be under 30 characters.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="instructions">Instructions</label>
+            <textarea id="instructions" formControlName="instructions" class="form-control"></textarea>
+            <div *ngIf="createExamForm.get('instructions')?.invalid && createExamForm.get('instructions')?.touched"
+                class="error">
+                Instructions are required.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="scheduled_at">Scheduled Date & Time</label>
+            <input type="datetime-local" id="scheduled_at" formControlName="scheduled_at" class="form-control" />
+            <div *ngIf="createExamForm.get('scheduled_at')?.invalid && createExamForm.get('scheduled_at')?.touched"
+                class="error">
+                Scheduled date and time are required.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="duration_in_minutes">Duration (minutes)</label>
+            <input type="number" id="duration_in_minutes" formControlName="duration_in_minutes" class="form-control" />
+            <div *ngIf="createExamForm.get('duration_in_minutes')?.invalid && createExamForm.get('duration_in_minutes')?.touched"
+                class="error">
+                Duration is required and must be at least 1 minute.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="is_AIproctored">
+                <input type="checkbox" id="is_AIproctored" formControlName="is_AIproctored" />
+                Enable AI Proctoring
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">Create Exam</button>
+    </form>
+
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+</div>
