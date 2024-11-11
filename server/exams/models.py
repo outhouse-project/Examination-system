@@ -3,8 +3,8 @@ from accounts.models import CollegeAdmin, Student
 
 class Exam(models.Model):
     EXAM_TYPE_CHOICES = (
-        ('mcq', 'MCQ Mode'),
-        ('video', 'Video Meet')
+        ('MCQ', 'MCQ Mode'),
+        ('Video', 'Video Meet')
     )
     exam_type = models.CharField(max_length=15, choices=EXAM_TYPE_CHOICES)
     title = models.CharField(max_length=30)

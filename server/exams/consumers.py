@@ -75,7 +75,7 @@ class TimeConsumer(AsyncWebsocketConsumer):
         # Check if the user is authenticated
         if self.scope["user"].is_authenticated:
             await self.accept()
-            # Start sending time every 60 seconds
+            # Start sending time every 40 seconds
             self.send_time_task = asyncio.create_task(self.send_time_periodically())
         else:
             await self.close(code=4001)
@@ -89,4 +89,4 @@ class TimeConsumer(AsyncWebsocketConsumer):
             # Fetch current UTC time
             current_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
             await self.send(json.dumps({"server_time": current_time}))
-            await asyncio.sleep(60)
+            await asyncio.sleep(40)

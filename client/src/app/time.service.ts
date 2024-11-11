@@ -1,16 +1,17 @@
 import { Injectable, signal } from '@angular/core';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimeService {
   private timeSocket!: WebSocket;
-  time = signal<string | null>(null);
+  time = signal<string>('');
 
   constructor() { }
 
   connect(): void {
-    this.timeSocket = new WebSocket('ws://localhost:8000/ws/time/');
+    this.timeSocket = new WebSocket(environment.baseURL.replace(/^http/, 'ws') + 'ws/time/');
 
     this.timeSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);

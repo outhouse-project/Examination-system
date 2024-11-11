@@ -15,7 +15,8 @@ import { CollegeAdminExamsComponent } from './dashboards/college-admin-dashboard
 import { StudentDefaultComponent } from './dashboards/student-dashboard/student-default/student-default.component';
 import { StudentExamsComponent } from './dashboards/student-dashboard/student-exams/student-exams.component';
 import { StudentResultsComponent } from './dashboards/student-dashboard/student-results/student-results.component';
-import { CreateExamComponent } from './create-exam/create-exam.component';
+import { CreateExamComponent } from './exams/create-exam/create-exam.component';
+import { EditExamComponent } from './exams/edit-exam/edit-exam.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -41,7 +42,10 @@ export const routes: Routes = [
                     { path: 'exams', component: CollegeAdminExamsComponent },
                 ]
             },
+            { path: 'video-exam/:roomId', component: ExamRoomComponent },
             { path: 'create-exam', component: CreateExamComponent },
+            { path: 'edit-exam/:examId', component: EditExamComponent },
+
         ]
     },
     {

@@ -17,7 +17,8 @@ export class StudentExamsComponent implements OnInit {
   exams: Exam[] = [];
   currentTime: Date = new Date();
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private timeService: TimeService) { timeService.connect(); }
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute,
+    private timeService: TimeService) { timeService.connect(); }
 
   ngOnInit(): void {
     this.getExams();
@@ -30,10 +31,11 @@ export class StudentExamsComponent implements OnInit {
   }
 
   canStartExam(scheduledTime: Object): boolean {
-    return scheduledTime <= this.timeService.time()!;
+    return scheduledTime <= this.timeService.time();
   }
 
-  startExam(examId: string): void {
-    this.router.navigate(['../../video-exam', examId], { relativeTo: this.route });
+  startExam(exam: Exam): void {
+    if (exam.exam_type === 'Video')
+      this.router.navigate(['../../video-exam', exam.id], { relativeTo: this.route });
   }
 }

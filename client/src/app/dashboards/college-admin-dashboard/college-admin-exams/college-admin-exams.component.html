@@ -1,2 +1,21 @@
+<div class="exam-list">
+    <h2>Manage Exams</h2>
+    <div *ngFor="let exam of exams" class="exam-card">
+        <div class="exam-header">
+            <a [routerLink]="['../../edit-exam','exam.id']" class="exam-title-link">{{ exam.title }}</a>
+            <span *ngIf="exam.exam_type" class="exam-tag">{{ exam.exam_type }} Mode</span>
+            <span *ngIf="exam.is_AI_proctored" class="exam-tag ai-proctored">AI Proctored</span>
+            <button (click)="startExam(exam)" *ngIf="exam.exam_type=='Video'"
+                [disabled]="!canStartExam(exam.scheduled_at)" class="start-button">
+                Start
+            </button>
+        </div>
+        <div class="exam-info">
+            <span class="exam-time">Scheduled at: {{ exam.scheduled_at | date:'short' }}</span>
+            <span class="exam-duration">Duration: {{ exam.duration }} minutes</span>
+        </div>
+    </div>
+</div>
+
 <!-- Button to create Exam -->
 <button routerLink="/college-admin/create-exam">Create Exam</button>
