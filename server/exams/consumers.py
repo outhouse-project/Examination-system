@@ -1,5 +1,5 @@
 import asyncio
-import datetime
+from django.utils import timezone
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -87,6 +87,6 @@ class TimeConsumer(AsyncWebsocketConsumer):
     async def send_time_periodically(self):
         while True:
             # Fetch current UTC time
-            current_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
+            current_time = timezone.now().isoformat()
             await self.send(json.dumps({"server_time": current_time}))
             await asyncio.sleep(40)

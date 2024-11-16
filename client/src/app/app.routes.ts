@@ -17,6 +17,7 @@ import { StudentExamsComponent } from './dashboards/student-dashboard/student-ex
 import { StudentResultsComponent } from './dashboards/student-dashboard/student-results/student-results.component';
 import { CreateExamComponent } from './exams/create-exam/create-exam.component';
 import { EditExamComponent } from './exams/edit-exam/edit-exam.component';
+import { ExamDetailsComponent } from './exams/exam-details/exam-details.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -44,8 +45,8 @@ export const routes: Routes = [
             },
             { path: 'video-exam/:roomId', component: ExamRoomComponent },
             { path: 'create-exam', component: CreateExamComponent },
+            { path: 'exam-details/:examId', component: ExamDetailsComponent },
             { path: 'edit-exam/:examId', component: EditExamComponent },
-
         ]
     },
     {

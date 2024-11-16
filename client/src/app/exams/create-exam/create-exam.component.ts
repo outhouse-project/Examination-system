@@ -14,8 +14,8 @@ import { environment } from '../../../environments/environment';
 export class CreateExamComponent {
   createExamForm: FormGroup;
   examTypes = [
-    { value: 'mcq', label: 'MCQ Mode' },
-    { value: 'video', label: 'Video Meet' }
+    { value: 'MCQ', label: 'MCQ Mode' },
+    { value: 'Video', label: 'Video Meet' }
   ];
   isSubmitting = false;
   successMessage: string | null = null;
@@ -40,8 +40,7 @@ export class CreateExamComponent {
     this.isSubmitting = true;
     this.successMessage = null;
     this.errorMessage = null;
-    this.createExamForm.value.scheduled_at = new Date(this.createExamForm.value.scheduled_at).toISOString();
-
+    this.createExamForm.value.scheduled_at = new Date(this.createExamForm.value.scheduled_at);
     this.http.post(environment.baseURL + 'exams/create-exam/', this.createExamForm.value).subscribe({
       next: (response: any) => {
         this.successMessage = 'Exam created successfully!';

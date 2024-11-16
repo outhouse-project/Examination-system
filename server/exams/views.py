@@ -23,6 +23,17 @@ def create_exam(request):
             is_AI_proctored=data.get('is_AIproctored', False),
             created_by=user.college_admin_profile
         )
+
+        if data['exam_type'] == 'MCQ':
+            for question_data in data['questions']:
+                question = Question.objects.create(question=question_data['text'], of_exam=exam)
+                for option_data in question_data['options']:
+                    Option.objects.create(
+                        option=option_data['text'],
+                        is_correct=option_data['is_correct'],
+                        of_question=question
+                    )
+
         return Response({'message': 'Exam created successfully', 'exam_id': exam.id}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -47,3 +58,23 @@ def list_exams(request):
         'is_AI_proctored': exam.is_AI_proctored,
     } for exam in exams]
     return Response({'exams': exam_data}, status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def edit_exam(request, exam_id):
+    user = request.user
+    exam = get_object_or_404(Exam, id=exam_id, created_by=user.college_admin_profile)
+
+    if exam.scheduled_at <= timezone.now():
+        return Response({'error': 'Cannot edit live exams.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Proceed with editing if the exam is not live
+    data = request.data
+    exam.title = data.get('title', exam.title)
+    exam.instructions = data.get('instructions', exam.instructions)
+    exam.scheduled_at = data.get('scheduled_at', exam.scheduled_at)
+    exam.duration_in_minutes = data.get('duration_in_minutes', exam.duration_in_minutes)
+    exam.is_AI_proctored = data.get('is_AI_proctored', exam.is_AI_proctored)
+    exam.exam_type = data.get('exam_type', exam.exam_type)
+    exam.save()
+
+    return Response({'message': 'Exam updated successfully'}, status=status.HTTP_200_OK)
