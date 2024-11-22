@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 from accounts.models import CollegeAdmin, Student
 
 class Exam(models.Model):
@@ -16,6 +18,14 @@ class Exam(models.Model):
 
     class Meta:
         ordering = ['-scheduled_at']
+
+    def clean(self):
+        if self.scheduled_at <= timezone.now().isoformat():
+            raise ValidationError({"scheduled_at": "The exam must be scheduled in the future."})
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
 class Question(models.Model):
     question = models.TextField()

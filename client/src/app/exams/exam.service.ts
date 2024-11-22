@@ -20,4 +20,12 @@ export class ExamService {
       })
     )
   }
+
+  createExam(value: any) {
+    return this.http.post(environment.baseURL + 'exams/create-exam/', value);
+  }
+
+  editExam(id: string, value: any) {
+    this.http.put(environment.baseURL + `exams/edit-exam/${id}/`, value)
+  }
 }

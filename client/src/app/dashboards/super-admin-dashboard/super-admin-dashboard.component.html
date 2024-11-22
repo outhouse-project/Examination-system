@@ -1,6 +1,9 @@
-<app-dashboard-navbar></app-dashboard-navbar>
-
-<div class="dashboard-container">
-    <app-sidebar [sidebarMenu]="sidebarList"></app-sidebar>
-    <router-outlet></router-outlet>
+<div class="container">
+    <app-dashboard-navbar></app-dashboard-navbar>
+    <div class="dashboard">
+        <app-sidebar [sidebarMenu]="sidebarList"></app-sidebar>
+        <div class="dashboard-content">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
 </div>

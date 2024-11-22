@@ -1,10 +1,11 @@
 <div class="create-exam-container">
-    <h2>Create a New Exam</h2>
+    <h2>Fill Exam Details</h2>
 
     <form [formGroup]="createExamForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
             <label for="exam_type">Exam Type</label>
-            <select id="exam_type" formControlName="exam_type" class="form-control">
+            <select id="exam_type" formControlName="exam_type" (change)="onExamTypeChange($event)" class="form-control"
+                required>
                 <option *ngFor="let type of examTypes" [value]="type.value">{{ type.label }}</option>
             </select>
             <div *ngIf="createExamForm.get('exam_type')?.invalid && createExamForm.get('exam_type')?.touched"
@@ -33,9 +34,12 @@
         <div class="form-group">
             <label for="scheduled_at">Scheduled Date & Time</label>
             <input type="datetime-local" id="scheduled_at" formControlName="scheduled_at" class="form-control" />
-            <div *ngIf="createExamForm.get('scheduled_at')?.invalid && createExamForm.get('scheduled_at')?.touched"
-                class="error">
-                Scheduled date and time are required.
+            <div *ngIf="createExamForm.get('scheduled_at')?.touched" class="error">
+                {{
+                createExamForm.get('scheduled_at')?.hasError('required') ? 'Scheduled date and time are
+                required.': createExamForm.get('scheduled_at')?.hasError('notFutureDate') ? 'The scheduled date must be
+                in the future.':''
+                }}
             </div>
         </div>
 
@@ -55,7 +59,46 @@
             </label>
         </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">Create Exam</button>
+        <div class="mcq-creator-container" *ngIf="isMcqType">
+            <h3>Questions</h3>
+            <div formArrayName="questions">
+                <div *ngFor="let question of questions.controls; let i = index" [formGroupName]="i"
+                    class="question-container">
+                    <div class="form-group">
+                        <label for="question">Question {{ i + 1 }}</label>
+                        <textarea formControlName="text" class="form-control"
+                            placeholder="Enter the question"></textarea>
+                        <div *ngIf="question.get('text')?.invalid && question.get('text')?.touched" class="error">
+                            Question text is required.
+                        </div>
+                    </div>
+
+                    <div formArrayName="options">
+                        <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j"
+                            class="option-container">
+                            <div class="form-group">
+                                <label for="option">Option {{ j + 1 }}</label>
+                                <input type="text" formControlName="text" class="form-control"
+                                    placeholder="Enter option text" />
+                                <label>
+                                    <input type="checkbox" formControlName="is_correct" />
+                                    Correct
+                                </label>
+                                <button type="button" class="btn btn-danger btn-sm" (click)="removeOption(i, j)">Remove
+                                    Option</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" (click)="addOption(i)">Add
+                            Option</button>
+                    </div>
+
+                    <button type="button" class="btn btn-danger" (click)="removeQuestion(i)">Remove Question</button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" (click)="addQuestion()">Add Question</button>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">Save Exam</button>
     </form>
 
     <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>

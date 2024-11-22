@@ -1,3 +1,16 @@
-.dashboard-container {
+.container {
     display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.dashboard {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.dashboard-content {
+    flex: 1;
+    overflow-y: auto;
 }
