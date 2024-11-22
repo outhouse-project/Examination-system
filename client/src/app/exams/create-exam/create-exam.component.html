@@ -4,7 +4,8 @@
     <form [formGroup]="createExamForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
             <label for="exam_type">Exam Type</label>
-            <select id="exam_type" formControlName="exam_type" class="form-control">
+            <select id="exam_type" formControlName="exam_type" (change)="onExamTypeChange($event)" class="form-control"
+                required>
                 <option *ngFor="let type of examTypes" [value]="type.value">{{ type.label }}</option>
             </select>
             <div *ngIf="createExamForm.get('exam_type')?.invalid && createExamForm.get('exam_type')?.touched"
@@ -54,6 +55,8 @@
                 Enable AI Proctoring
             </label>
         </div>
+
+        <app-mcq-creator *ngIf="isMcqType" (questionsChange)="onQuestionsChange($event)"></app-mcq-creator>
 
         <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">Create Exam</button>
     </form>

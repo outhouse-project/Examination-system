@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { environment } from '../../../environments/environment';
+import { McqCreatorComponent } from '../../mcq-exam/mcq-creator/mcq-creator.component';
+import { MCQ } from '../../mcq-exam/mcq.interface';
 
 @Component({
   selector: 'app-create-exam',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, McqCreatorComponent],
   templateUrl: './create-exam.component.html',
   styleUrl: './create-exam.component.css'
 })
@@ -20,6 +22,7 @@ export class CreateExamComponent {
   isSubmitting = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
+  isMcqType = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.createExamForm = this.fb.group({
@@ -52,5 +55,17 @@ export class CreateExamComponent {
         this.isSubmitting = false;
       }
     });
+  }
+
+  onExamTypeChange(event: any) {
+    this.isMcqType = event.target.value === 'MCQ';
+    if (this.isMcqType) {
+      this.createExamForm.addControl('questions', this.fb.array([]));
+    } else {
+      this.createExamForm.removeControl('questions');
+    }
+  }
+  onQuestionsChange(questions: MCQ[]): void {
+    this.createExamForm.get('questions')?.setValue(questions);
   }
 }

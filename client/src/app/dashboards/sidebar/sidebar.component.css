@@ -1,9 +1,10 @@
 /* Sidebar Styling */
 .sidebar {
-    height: 100vh;
+    height: 100%;
     width: 0;
     background-color: #333;
     overflow-x: hidden;
+    overflow-y: auto;
     transition: 0.3s;
     margin-right: 4px;
 }

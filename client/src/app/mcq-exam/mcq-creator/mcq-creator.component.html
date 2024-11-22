@@ -1,0 +1,38 @@
+<div class="mcq-creator-container">
+    <h3>MCQ Creator</h3>
+    <form [formGroup]="mcqForm">
+        <div formArrayName="questions">
+            <div *ngFor="let question of questions.controls; let i = index" [formGroupName]="i"
+                class="question-container">
+                <div class="form-group">
+                    <label for="question">Question {{ i + 1 }}</label>
+                    <textarea formControlName="text" class="form-control" placeholder="Enter the question"></textarea>
+                    <div *ngIf="question.get('text')?.invalid && question.get('text')?.touched" class="error">
+                        Question text is required.
+                    </div>
+                </div>
+
+                <div formArrayName="options">
+                    <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j"
+                        class="option-container">
+                        <div class="form-group">
+                            <label for="option">Option {{ j + 1 }}</label>
+                            <input type="text" formControlName="text" class="form-control"
+                                placeholder="Enter option text" />
+                            <label>
+                                <input type="checkbox" formControlName="is_correct" />
+                                Correct
+                            </label>
+                            <button type="button" class="btn btn-danger btn-sm" (click)="removeOption(i, j)">Remove
+                                Option</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="addOption(i)">Add Option</button>
+                </div>
+
+                <button type="button" class="btn btn-danger" (click)="removeQuestion(i)">Remove Question</button>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="addQuestion()">Add Question</button>
+    </form>
+</div>
