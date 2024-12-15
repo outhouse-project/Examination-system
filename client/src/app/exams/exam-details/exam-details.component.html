@@ -1,2 +1,8 @@
+<div class="delete-container" *ngIf="isExamInFuture()">
+    <!-- Delete Button -->
+    <button class="delete-btn" (click)="deleteExam()">Delete Exam</button>
+
+    <!-- Display Success/Error Messages -->
+    <p *ngIf="deleteMessage" class="delete-message">{{ deleteMessage }}</p>
+</div>
 <app-create-exam [examData]="examDetails"></app-create-exam>
-<p>exam details works!</p>

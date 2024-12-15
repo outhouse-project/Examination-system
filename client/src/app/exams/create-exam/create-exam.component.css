@@ -3,6 +3,23 @@
     margin: 0 auto;
 }
 
+.warning-message {
+    background-color: #ffcccb;
+    color: #a94442;
+    border: 1px solid #f5c6cb;
+    padding: 4px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Hide all buttons within the disabled form */
+.create-exam-container.disabled button {
+    display: none;
+}
+
 .form-group {
     margin-bottom: 1rem;
 }
@@ -14,6 +31,7 @@
 
 .success-message {
     color: green;
+    font-weight: bold;
     margin-top: 1rem;
 }
 

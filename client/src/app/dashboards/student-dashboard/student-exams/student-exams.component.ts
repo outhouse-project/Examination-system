@@ -26,7 +26,7 @@ export class StudentExamsComponent implements OnInit {
   }
 
   canStartExam(scheduledTime: Date): boolean {
-    return scheduledTime <= this.timeService.time();
+    return scheduledTime <= this.timeService.time()!;
   }
 
   startExam(exam: Exam): void {

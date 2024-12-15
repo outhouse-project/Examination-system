@@ -6,7 +6,7 @@ import { environment } from '../environments/environment';
 })
 export class TimeService {
   private timeSocket!: WebSocket;
-  time = signal<Date>(new Date('2080-12-28T10:46:44.105Z'));
+  time = signal<Date | null>(null);
   private timeUpdate: any;
 
   constructor() { }
@@ -21,7 +21,7 @@ export class TimeService {
       this.time.set(new Date(data.server_time));
 
       this.timeUpdate = setInterval(() => {
-        const date = this.time();
+        const date = this.time()!;
         date.setSeconds(date.getSeconds() + 1);
         this.time.set(date);
       }, 1000);

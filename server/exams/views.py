@@ -21,7 +21,7 @@ def create_exam(request):
             instructions=data['instructions'],
             scheduled_at=data['scheduled_at'],
             duration_in_minutes=data['duration_in_minutes'],
-            is_AI_proctored=data.get('is_AIproctored', False),
+            is_AI_proctored=data.get('is_AI_proctored', False),
             created_by=user.college_admin_profile
         )
 
@@ -41,6 +41,10 @@ def create_exam(request):
 
 @api_view(['GET'])
 def get_exam_details(request, exam_id):
+    user = request.user
+    if user.role != 'college_admin':
+        return Response({'error': 'Only college admins can see exam details.'}, status=status.HTTP_403_FORBIDDEN)
+
     try:
         exam = get_object_or_404(Exam, id=exam_id)
 
@@ -58,18 +62,16 @@ def get_exam_details(request, exam_id):
 
         # If the exam type is MCQ, include the questions and their options
         if exam.exam_type == 'MCQ':
-            questions = Question.objects.filter(of_exam=exam)
+            questions = exam.questions.all()
             for question in questions:
                 question_data = {
-                    'id': question.id,
                     'text': question.question,
                     'options': []
                 }
 
-                options = Option.objects.filter(of_question=question)
+                options = question.options.all()
                 for option in options:
                     option_data = {
-                        'id': option.id,
                         'text': option.option,
                         'is_correct': option.is_correct
                     }
@@ -97,7 +99,7 @@ def list_exams(request):
         'title': exam.title,
         'exam_type': exam.exam_type,
         'scheduled_at': exam.scheduled_at,
-        'duration': exam.duration_in_minutes,
+        'duration_in_minutes': exam.duration_in_minutes,
         'is_AI_proctored': exam.is_AI_proctored,
     } for exam in exams]
     return Response({'exams': exam_data}, status=status.HTTP_200_OK)
@@ -123,33 +125,32 @@ def edit_exam(request, exam_id):
 
         # If the exam type is MCQ, update the questions and options
         if exam.exam_type == 'MCQ':
+            exam.questions.all().delete()
             for question_data in data['questions']:
-                question_id = question_data.get('id', None)
+                question = Question.objects.create(question=question_data['text'], of_exam=exam)
 
-                # If question ID exists, update the question; otherwise, create a new one
-                if question_id:
-                    question = get_object_or_404(Question, id=question_id, of_exam=exam)
-                    question.question = question_data['text']
-                    question.save()
-                else:
-                    question = Question.objects.create(question=question_data['text'], of_exam=exam)
-
-                # Update or create options for this question
+                # Update options for this question
                 for option_data in question_data['options']:
-                    option_id = option_data.get('id', None)
-
-                    if option_id:
-                        option = get_object_or_404(Option, id=option_id, of_question=question)
-                        option.option = option_data['text']
-                        option.is_correct = option_data['is_correct']
-                        option.save()
-                    else:
-                        Option.objects.create(
-                            option=option_data['text'],
-                            is_correct=option_data['is_correct'],
-                            of_question=question
-                        )
+                    Option.objects.create(
+                        option=option_data['text'],
+                        is_correct=option_data['is_correct'],
+                        of_question=question
+                    )
 
         return Response({'message': 'Exam updated successfully'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def delete_exam(request, exam_id):
+    user = request.user
+    exam = get_object_or_404(Exam, id=exam_id, created_by=user.college_admin_profile)
+
+    if exam.scheduled_at <= timezone.now():
+        return Response({'error': 'Cannot delete an exam that has already started or is completed.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        exam.delete()
+        return Response({'message': 'Exam deleted successfully'}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

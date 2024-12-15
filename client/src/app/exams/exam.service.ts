@@ -26,6 +26,6 @@ export class ExamService {
   }
 
   editExam(id: string, value: any) {
-    this.http.put(environment.baseURL + `exams/edit-exam/${id}/`, value)
+    return this.http.put(environment.baseURL + `exams/edit-exam/${id}/`, value);
   }
 }

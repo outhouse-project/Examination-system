@@ -1,7 +1,12 @@
 <div class="create-exam-container">
     <h2>Fill Exam Details</h2>
 
-    <form [formGroup]="createExamForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="createExamForm.disabled" class="warning-message">
+        This exam is past its scheduled time. You can no longer edit the details.
+    </div>
+
+    <form [formGroup]="createExamForm" (ngSubmit)="onSubmit()" class="create-exam-container"
+        [ngClass]="{ 'disabled': createExamForm.disabled }">
         <div class="form-group">
             <label for="exam_type">Exam Type</label>
             <select id="exam_type" formControlName="exam_type" (change)="onExamTypeChange($event)" class="form-control"
@@ -53,8 +58,8 @@
         </div>
 
         <div class="form-group">
-            <label for="is_AIproctored">
-                <input type="checkbox" id="is_AIproctored" formControlName="is_AIproctored" />
+            <label for="is_AI_proctored">
+                <input type="checkbox" id="is_AI_proctored" formControlName="is_AI_proctored" />
                 Enable AI Proctoring
             </label>
         </div>
