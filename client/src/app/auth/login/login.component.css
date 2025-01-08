@@ -44,3 +44,106 @@ button {
     border-radius: 5px;
     cursor: pointer;
 }
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: radial-gradient(circle, #1f1c2c, #928dab);
+    color: #fff;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #1f1c2c;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.error-message {
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.login-container label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+.login-container input,
+.login-container select {
+    width: 100%;
+    padding: 0.9rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #f9f9f9;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.login-container input:focus,
+.login-container select:focus {
+    outline: none;
+    border-color: #1f1c2c;
+    box-shadow: 0 0 8px rgba(31, 28, 44, 0.5);
+    background: #fff;
+}
+
+button {
+    background: linear-gradient(45deg, #1f1c2c, #928dab);
+    color: #fff;
+    border: none;
+    padding: 0.9rem 1.2rem;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+    background: linear-gradient(45deg, #928dab, #1f1c2c);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        padding: 1.5rem;
+    }
+
+    .login-container h2 {
+        font-size: 1.6rem;
+    }
+}
