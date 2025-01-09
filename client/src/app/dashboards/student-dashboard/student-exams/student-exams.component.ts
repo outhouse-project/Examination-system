@@ -32,5 +32,7 @@ export class StudentExamsComponent implements OnInit {
   startExam(exam: Exam): void {
     if (exam.exam_type == 'Video')
       this.router.navigate(['../../video-exam', exam.id], { relativeTo: this.route });
+    else if (exam.exam_type == 'MCQ')
+      this.router.navigate(['../../mcq-exam', exam.id], { relativeTo: this.route });
   }
 }

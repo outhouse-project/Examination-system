@@ -17,6 +17,7 @@ import { StudentExamsComponent } from './dashboards/student-dashboard/student-ex
 import { StudentResultsComponent } from './dashboards/student-dashboard/student-results/student-results.component';
 import { CreateExamComponent } from './exams/create-exam/create-exam.component';
 import { ExamDetailsComponent } from './exams/exam-details/exam-details.component';
+import { AttemptMcqComponent } from './mcq-exam/attempt-mcq/attempt-mcq.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -57,7 +58,8 @@ export const routes: Routes = [
                     { path: 'results', component: StudentResultsComponent },
                 ]
             },
-            { path: 'video-exam/:roomId', component: ExamRoomComponent }
+            { path: 'video-exam/:roomId', component: ExamRoomComponent },
+            { path: 'mcq-exam/:examId', component: AttemptMcqComponent }
         ]
     },
     { path: '**', component: PagenotfoundComponent }

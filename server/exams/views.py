@@ -13,7 +13,6 @@ def create_exam(request):
         return Response({'error': 'Only college admins can create exams.'}, status=status.HTTP_403_FORBIDDEN)
 
     data = request.data
-
     try:
         exam = Exam.objects.create(
             exam_type=data['exam_type'],
@@ -42,11 +41,15 @@ def create_exam(request):
 @api_view(['GET'])
 def get_exam_details(request, exam_id):
     user = request.user
-    if user.role != 'college_admin':
-        return Response({'error': 'Only college admins can see exam details.'}, status=status.HTTP_403_FORBIDDEN)
 
     try:
-        exam = get_object_or_404(Exam, id=exam_id)
+        # Check access rights
+        if user.role == 'college_admin':
+            exam = get_object_or_404(Exam, id=exam_id, created_by=user.college_admin_profile)
+        elif user.role == 'student':
+            exam = get_object_or_404(Exam, id=exam_id, created_by=user.student_profile.college_admin)
+        else:
+            return Response({'error': 'Invalid role.'}, status=status.HTTP_403_FORBIDDEN)
 
         # Prepare the exam data
         exam_data = {
@@ -65,16 +68,21 @@ def get_exam_details(request, exam_id):
             questions = exam.questions.all()
             for question in questions:
                 question_data = {
-                    'text': question.question,
+                    'id': question.id,
+                    'question': question.question,
                     'options': []
                 }
 
                 options = question.options.all()
                 for option in options:
                     option_data = {
-                        'text': option.option,
-                        'is_correct': option.is_correct
+                        'id': option.id,
+                        'option': option.option
                     }
+                    # Include is_correct field only for college admins
+                    if user.role == 'college_admin':
+                        option_data['is_correct'] = option.is_correct
+
                     question_data['options'].append(option_data)
 
                 exam_data['questions'].append(question_data)
@@ -152,5 +160,63 @@ def delete_exam(request, exam_id):
     try:
         exam.delete()
         return Response({'message': 'Exam deleted successfully'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def submit_exam(request, exam_id):
+    user = request.user
+    if user.role != 'student':
+        return Response({'error': 'Only students can submit exams.'}, status=status.HTTP_403_FORBIDDEN)
+
+    student = user.student_profile
+    exam = get_object_or_404(Exam, id=exam_id, created_by=student.college_admin)
+    score = None
+
+    # Check if the exam is live
+    current_time = timezone.now()
+    exam_end_time = exam.scheduled_at + timezone.timedelta(minutes=exam.duration_in_minutes+1)
+    if current_time < exam.scheduled_at:
+        return Response({'error': 'The exam has not started yet.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if current_time > exam_end_time:
+        return Response({'error': 'The exam has already ended.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Check if the student has already submitted this exam
+    if Result.objects.filter(of_exam=exam, of_student=student).exists():
+        return Response({'error': 'You have already submitted this exam.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        if exam.exam_type == 'MCQ':
+            # Retrieve student responses
+            responses = request.data
+            score = 0
+
+            questions = exam.questions.all()
+            for question in questions:
+                selected_option_ids = set(responses.get(str(question.id), []))
+
+                correct_options = question.options.filter(is_correct=True)
+                correct_option_ids = set(correct_options.values_list('id', flat=True)) # Get all correct option IDs as a set
+
+                if selected_option_ids == correct_option_ids:
+                    score += 1
+
+                for selected_option_id in selected_option_ids:
+                    selected_option = get_object_or_404(Option, id=selected_option_id)
+                    StudentResponse.objects.create(
+                        of_student=student,
+                        selected_option=selected_option
+                    )
+
+        # Save the result
+        Result.objects.create(
+            score=score,
+            of_exam=exam,
+            of_student=student
+        )
+
+        return Response({'message': 'Exam submitted successfully.', 'score': score}, status=status.HTTP_200_OK)
+
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    baseURL: "https://examination-system-backend.onrender.com/"
+    baseURL: "https://exam-sys-backend.vercel.app/"
 };

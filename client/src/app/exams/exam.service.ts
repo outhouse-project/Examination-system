@@ -21,11 +21,40 @@ export class ExamService {
     )
   }
 
+  getExamById(id: string) {
+    return this.http.get(environment.baseURL + `exams/exam-details/${id}/`);
+  }
+
+  getDefaultExam() {
+    return {
+      id: '',
+      title: '',
+      instructions: '',
+      exam_type: '',
+      scheduled_at: new Date(),
+      duration_in_minutes: 0,
+      is_AI_proctored: false,
+      questions: [{
+        id: '',
+        question: '',
+        options: [{ id: '', option: '', is_correct: false }]
+      }]
+    };
+  }
+
   createExam(value: any) {
     return this.http.post(environment.baseURL + 'exams/create-exam/', value);
   }
 
   editExam(id: string, value: any) {
     return this.http.put(environment.baseURL + `exams/edit-exam/${id}/`, value);
+  }
+
+  submitExam(id: string, ans: any) {
+    return this.http.post(environment.baseURL + `exams/submit-exam/${id}/`, ans);
+  }
+
+  deleteExam(id: string) {
+    return this.http.delete(environment.baseURL + `exams/delete-exam/${id}/`);
   }
 }

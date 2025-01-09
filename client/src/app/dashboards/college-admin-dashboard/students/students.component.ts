@@ -41,7 +41,7 @@ export class StudentsComponent {
           this.showStudents();
         },
         error: (err) => {
-          alert('Error: ' + err.message);
+          alert('Error: ' + err.error.error);
         },
       });
     }

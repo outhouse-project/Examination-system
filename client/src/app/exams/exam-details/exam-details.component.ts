@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Exam } from '../exam.interface';
 import { CreateExamComponent } from '../create-exam/create-exam.component';
 import { CommonModule } from '@angular/common';
 import { TimeService } from '../../time.service';
+import { ExamService } from '../exam.service';
 
 @Component({
   selector: 'app-exam-details',
@@ -18,12 +17,12 @@ export class ExamDetailsComponent implements OnInit {
   examDetails: Exam | undefined;
   deleteMessage: string = '';
 
-  constructor(private http: HttpClient, private route: ActivatedRoute,
-    private router: Router, private timeService: TimeService) { }
+  constructor(private route: ActivatedRoute, private router: Router,
+    private timeService: TimeService, private examService: ExamService) { }
 
   ngOnInit(): void {
-    const examId = this.route.snapshot.paramMap.get('examId');
-    this.http.get(environment.baseURL + `exams/exam-details/${examId}/`).subscribe({
+    const examId = this.route.snapshot.paramMap.get('examId')!;
+    this.examService.getExamById(examId).subscribe({
       next: (data: any) => {
         this.examDetails = data.exam;
         this.examDetails!.scheduled_at = new Date(this.examDetails!.scheduled_at);
@@ -36,8 +35,7 @@ export class ExamDetailsComponent implements OnInit {
 
   deleteExam(): void {
     if (confirm('Are you sure you want to delete this exam? This action cannot be undone.')) {
-      const examId = this.route.snapshot.paramMap.get('examId');
-      this.http.delete(environment.baseURL + `exams/delete-exam/${examId}/`).subscribe({
+      this.examService.deleteExam(this.examDetails?.id!).subscribe({
         next: () => {
           this.deleteMessage = 'Exam deleted successfully!';
           setTimeout(() => {

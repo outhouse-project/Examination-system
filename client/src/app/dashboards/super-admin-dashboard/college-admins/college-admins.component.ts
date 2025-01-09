@@ -41,7 +41,7 @@ export class CollegeAdminsComponent {
           this.showCollegeAdmins();
         },
         error: (err) => {
-          alert('Error: ' + err.message);
+          alert('Error: ' + err.error.error);
         },
       });
     }

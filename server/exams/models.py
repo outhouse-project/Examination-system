@@ -20,7 +20,11 @@ class Exam(models.Model):
         ordering = ['-scheduled_at']
 
     def clean(self):
-        if self.scheduled_at <= timezone.now().isoformat():
+        if isinstance(self.scheduled_at, str):
+            if self.scheduled_at <= timezone.now().isoformat():
+                print(timezone.now().isoformat())
+                raise ValidationError({"scheduled_at": "The exam must be scheduled in the future."})
+        elif self.scheduled_at <= timezone.now():
             raise ValidationError({"scheduled_at": "The exam must be scheduled in the future."})
 
     def save(self, *args, **kwargs):
@@ -37,7 +41,7 @@ class Option(models.Model):
     of_question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
 
 class Result(models.Model):
-    score=models.IntegerField()
+    score=models.IntegerField(null=True)
     of_exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='results')
     of_student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='results')
 

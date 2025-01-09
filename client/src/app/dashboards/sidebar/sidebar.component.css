@@ -2,52 +2,6 @@
 .sidebar {
     height: 100%;
     width: 0;
-    background-color: #333;
-    overflow-x: hidden;
-    overflow-y: auto;
-    transition: 0.3s;
-    margin-right: 4px;
-}
-
-.sidebar.active {
-    width: 250px;
-    border-top: 1px solid gray;
-}
-
-.sidebar a {
-    padding: 15px 20px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #f1f1f1;
-    display: block;
-    border: 1px solid gray;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.sidebar a:hover {
-    background-color: #646464;
-}
-
-.active-link {
-    background-color: #565656;
-}
-
-/* Toggle Button Styling */
-.sidebar-toggle {
-    font-size: 24px;
-    background-color: transparent;
-    color: red;
-    border: 1px solid gray;
-    cursor: pointer;
-    position: absolute;
-    top: 8px;
-    margin-right: 30px;
-}
-/* Sidebar Styling */
-.sidebar {
-    height: 100%;
-    width: 0;
     background: linear-gradient(45deg, #4a90e2, #007aff);
     overflow-x: hidden;
     overflow-y: auto;
@@ -66,7 +20,7 @@
     font-size: 1rem;
     color: #fff;
     display: block;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.42);
     cursor: pointer;
     transition: background 0.3s ease, color 0.3s ease;
 }
@@ -89,12 +43,12 @@
     border: none;
     cursor: pointer;
     position: absolute;
-    top: 1rem;
-    left: 1rem;
+    top: 0.4rem;
+    left: 0.6rem;
     z-index: 1000;
     transition: color 0.3s ease;
 }
 
 .sidebar-toggle:hover {
-    color:#DAEE01
+    color: #DAEE01;
 }

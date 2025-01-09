@@ -1,18 +1,3 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table,
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-th {
-    background-color: #f2f2f2;
-}
 /* General Styles */
 body {
     font-family: 'Roboto', sans-serif;
@@ -28,17 +13,17 @@ div {
 
 /* Table Styling */
 table {
-    width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin: 0 auto;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background: #fff;
 }
 
-table th, table td {
-    padding: 12px;
+table th,
+table td {
+    padding: 6px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border: 1px solid #ddd;
 }
 
 table th {

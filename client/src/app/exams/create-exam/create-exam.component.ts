@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, input, Input, OnInit } from '@angular/core';
+import { Component, effect, input, } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { futureDateValidator } from './future-date.validator';
 import { ExamService } from '../exam.service';
 import { Exam } from '../exam.interface';
 import { TimeService } from '../../time.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-exam',
@@ -26,8 +26,8 @@ export class CreateExamComponent {
   errorMessage: string | null = null;
   isMcqType = false;
 
-  constructor(private fb: FormBuilder, private examService: ExamService, private timeService: TimeService,
-    private route: ActivatedRoute, private router: Router) {
+  constructor(private fb: FormBuilder, private examService: ExamService,
+    private timeService: TimeService, private router: Router) {
     this.createExamForm = this.fb.group({
       exam_type: ['', Validators.required],
       title: ['', [Validators.required, Validators.maxLength(30)]],
@@ -59,11 +59,11 @@ export class CreateExamComponent {
       this.createExamForm.setControl('questions', this.fb.array([]));
       data.questions.forEach((q: any) => {
         const questionGroup = this.fb.group({
-          text: [q.text, Validators.required],
+          text: [q.question, Validators.required],
           options: this.fb.array(
             q.options.map((o: any) =>
               this.fb.group({
-                text: [o.text, Validators.required],
+                text: [o.option, Validators.required],
                 is_correct: [o.is_correct]
               })
             )

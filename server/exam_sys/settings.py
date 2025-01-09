@@ -73,6 +73,11 @@ ROOT_URLCONF = 'exam_sys.urls'
 
 CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:4200').split(',')
 CSRF_TRUSTED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:4200').split(',')
+CSRF_COOKIE_SECURE = not DEBUG
+if not DEBUG:
+    CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = not DEBUG
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'content-type',

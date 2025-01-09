@@ -1,0 +1,22 @@
+<div class="attempt-exam-container">
+    <h2>{{ examData.title }}</h2>
+    <p><strong>Instructions:</strong> {{ examData.instructions }}</p>
+    <p><strong>Time Remaining:</strong> {{ timeRemaining }}</p>
+
+    <form [formGroup]="attemptForm" (ngSubmit)="onSubmit()">
+        <div *ngFor="let question of examData.questions; let i = index" class="question-container">
+            <h3>{{ i + 1 }}. {{ question.question }} </h3>
+            <div *ngFor="let option of question.options" class="option-container">
+                <label>
+                    <input type="checkbox" [value]="option.id" (change)="onOptionChange(i, option.id, $event)" />
+                    {{ option.option }}
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">Submit Exam</button>
+    </form>
+
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+</div>

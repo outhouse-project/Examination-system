@@ -21,9 +21,7 @@ export class TimeService {
       this.time.set(new Date(data.server_time));
 
       this.timeUpdate = setInterval(() => {
-        const date = this.time()!;
-        date.setSeconds(date.getSeconds() + 1);
-        this.time.set(date);
+        this.time.set(new Date(this.time()!.getTime() + 1000));
       }, 1000);
     };
   }
