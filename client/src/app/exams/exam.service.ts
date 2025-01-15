@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs';
 import { Exam } from './exam.interface';
@@ -13,10 +13,14 @@ export class ExamService {
   getExams() {
     return this.http.get(environment.baseURL + 'exams/list-exams/').pipe(
       map((response: any) => {
-        return response.exams.map((exam: Exam) => ({
-          ...exam,
-          scheduled_at: new Date(exam.scheduled_at)
-        }));
+        return response.exams.map((exam: Exam) => {
+          const scheduled_at = new Date(exam.scheduled_at);
+          return {
+            ...exam,
+            scheduled_at: scheduled_at,
+            endTime: new Date(scheduled_at.getTime() + exam.duration_in_minutes * 60 * 1000)
+          }
+        });
       })
     )
   }
@@ -32,6 +36,7 @@ export class ExamService {
       instructions: '',
       exam_type: '',
       scheduled_at: new Date(),
+      endTime: new Date(),
       duration_in_minutes: 0,
       is_AI_proctored: false,
       questions: [{
@@ -56,5 +61,13 @@ export class ExamService {
 
   deleteExam(id: string) {
     return this.http.delete(environment.baseURL + `exams/delete-exam/${id}/`);
+  }
+
+  getResults(id: string) {
+    return this.http.get(environment.baseURL + `exams/get-results/${id}/`);
+  }
+
+  getResponses(examId: string, studentId: string) {
+    return this.http.get(environment.baseURL + `exams/get-responses/${examId}/${studentId}/`);
   }
 }

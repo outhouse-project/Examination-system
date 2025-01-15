@@ -29,6 +29,10 @@ export class CollegeAdminExamsComponent {
     return scheduledTime <= this.timeService.time()!;
   }
 
+  isActiveOrUpcoming(endTime: Date): boolean {
+    return endTime > this.timeService.time()!;
+  }
+
   startExam(exam: Exam): void {
     if (exam.exam_type == 'Video')
       this.router.navigate(['../../video-exam', exam.id], { relativeTo: this.route });

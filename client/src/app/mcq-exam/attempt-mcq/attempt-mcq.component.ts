@@ -15,7 +15,7 @@ import { MCQ } from '../mcq.interface';
   styleUrl: './attempt-mcq.component.css'
 })
 export class AttemptMcqComponent {
-  examData!: Exam;
+  examData: Exam;
   attemptForm: FormGroup;
   isSubmitting = false;
   successMessage = '';
@@ -88,7 +88,7 @@ export class AttemptMcqComponent {
         }, 2000);
       },
       error: (err) => {
-        this.errorMessage = 'Failed to submit exam. Please try again. ' + err.error.error;
+        this.errorMessage = 'Failed to submit exam. ' + err.error.error;
         this.isSubmitting = false;
       }
     });

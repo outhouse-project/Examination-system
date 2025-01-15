@@ -15,6 +15,7 @@ export class CollegeAdminDashboardComponent {
   sidebarList: SidebarOption[] = [
     { label: 'Dashboard', path: './' },
     { label: 'Students', path: 'students' },
-    { label: 'Exams', path: 'exams' }
+    { label: 'Exams', path: 'exams' },
+    { label: 'Results', path: 'results' }
   ];
 }

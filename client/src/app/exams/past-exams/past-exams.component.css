@@ -1,0 +1,117 @@
+/* General Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.note {
+    background-color: #fff8d3;
+    color: #7f6436;
+    padding: 10px;
+    border: 1px solid #faebcc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.exam-list {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.exam-list h2 {
+    text-align: center;
+    color: #007aff;
+}
+
+.exam-card {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fdfdfd;
+    transition: box-shadow 0.3s ease;
+}
+
+.exam-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.exam-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.exam-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.exam-tag {
+    background-color: #e0f7fa;
+    color: #00796b;
+    padding: 0 5px;
+    font-size: 0.8rem;
+    border: 2px dashed;
+    border-radius: 14px;
+    text-transform: capitalize;
+    margin-left: 12px;
+}
+
+.exam-tag.ai-proctored {
+    background-color: #ffe0b2;
+    color: #e65100;
+}
+
+.result-button {
+    background-color: #007aff;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    margin-left: auto;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.result-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.result-button:hover:enabled {
+    background-color: #005bb5;
+}
+
+.exam-info {
+    display: flex;
+    font-size: 0.9rem;
+    color: #555;
+    gap: 32px;
+}
+
+button[routerLink] {
+    display: block;
+    margin: 20px auto;
+    background-color: #007aff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+button[routerLink]:hover {
+    background-color: #005bb5;
+}

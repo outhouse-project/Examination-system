@@ -1,0 +1,21 @@
+<div class="exam-list">
+    <h2>Past Exams</h2>
+    <div class="note">
+        &#9432; Results will be available after the exam has finished. Please wait if you submitted early.
+    </div>
+    <div *ngFor="let exam of exams" class="exam-card">
+        <div class="exam-header">
+            <span class="exam-title">{{ exam.title }}</span>
+            <span *ngIf="exam.exam_type" class="exam-tag">{{ exam.exam_type }} Mode</span>
+            <span *ngIf="exam.is_AI_proctored" class="exam-tag ai-proctored">AI Proctored</span>
+            <button (click)="viewResult(exam)" *ngIf="exam.exam_type=='MCQ'" [disabled]=" !canViewResult(exam.endTime)"
+                class="result-button">
+                View Result
+            </button>
+        </div>
+        <div class="exam-info">
+            <span class="exam-time">Scheduled at: {{ exam.scheduled_at | date:'short' }}</span>
+            <span class="exam-duration">Duration: {{ exam.duration_in_minutes }} minutes</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="container">
+    <h1>Exam Responses</h1>
+
+    <div class="total-score">
+        Total Score: {{ totalScore+'/'+questionCount }}
+    </div>
+
+    <div *ngIf="isLoading" class="loading">Loading responses...</div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+    <div *ngIf="!isLoading && !errorMessage">
+        <div *ngFor="let question of responses | keyvalue" class="question-container">
+            <div class="question-header">
+                <h3>Q. {{ question.value.question }}</h3>
+                <span class="question-score">Score: {{ question.value.score }}</span>
+            </div>
+
+            <div class="options-container">
+                <div *ngFor="let option of question.value.options" class="option" [class.correct]="option.is_correct"
+                    [class.selected]="option.is_selected">
+                    <span class="option-check">
+                        <span *ngIf="option.is_correct">&check;</span>
+                    </span>
+                    {{ option.text }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

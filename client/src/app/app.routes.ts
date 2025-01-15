@@ -14,10 +14,13 @@ import { StudentsComponent } from './dashboards/college-admin-dashboard/students
 import { CollegeAdminExamsComponent } from './dashboards/college-admin-dashboard/college-admin-exams/college-admin-exams.component';
 import { StudentDefaultComponent } from './dashboards/student-dashboard/student-default/student-default.component';
 import { StudentExamsComponent } from './dashboards/student-dashboard/student-exams/student-exams.component';
-import { StudentResultsComponent } from './dashboards/student-dashboard/student-results/student-results.component';
 import { CreateExamComponent } from './exams/create-exam/create-exam.component';
 import { ExamDetailsComponent } from './exams/exam-details/exam-details.component';
 import { AttemptMcqComponent } from './mcq-exam/attempt-mcq/attempt-mcq.component';
+import { ResultComponent } from './exams/result/result.component';
+import { PastExamsComponent } from './exams/past-exams/past-exams.component';
+import { ResultTableComponent } from './exams/result-table/result-table.component';
+import { ResponsesComponent } from './mcq-exam/responses/responses.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -41,6 +44,13 @@ export const routes: Routes = [
                     { path: '', pathMatch: 'full', component: CollegeAdminDefaultComponent },
                     { path: 'students', component: StudentsComponent },
                     { path: 'exams', component: CollegeAdminExamsComponent },
+                    { path: 'results', component: PastExamsComponent },
+                    {
+                        path: 'results/:examId', component: ResultComponent, children: [
+                            { path: '', pathMatch: 'full', component: ResultTableComponent },
+                            { path: ':studentId', component: ResponsesComponent }
+                        ]
+                    }
                 ]
             },
             { path: 'video-exam/:roomId', component: ExamRoomComponent },
@@ -55,7 +65,13 @@ export const routes: Routes = [
                 path: 'dashboard', component: StudentDashboardComponent, children: [
                     { path: '', pathMatch: 'full', component: StudentDefaultComponent },
                     { path: 'exams', component: StudentExamsComponent },
-                    { path: 'results', component: StudentResultsComponent },
+                    { path: 'results', component: PastExamsComponent },
+                    {
+                        path: 'results/:examId', component: ResultComponent, children: [
+                            { path: '', pathMatch: 'full', component: ResultTableComponent },
+                            { path: ':studentId', component: ResponsesComponent }
+                        ]
+                    }
                 ]
             },
             { path: 'video-exam/:roomId', component: ExamRoomComponent },

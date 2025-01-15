@@ -6,6 +6,7 @@ export interface Exam {
     instructions: string,
     exam_type: string,
     scheduled_at: Date,
+    endTime: Date,
     duration_in_minutes: number,
     is_AI_proctored: boolean,
     questions: MCQ[] | undefined,

@@ -199,6 +199,7 @@ def submit_exam(request, exam_id):
                 correct_options = question.options.filter(is_correct=True)
                 correct_option_ids = set(correct_options.values_list('id', flat=True)) # Get all correct option IDs as a set
 
+                # Give score if all and only correct options are chosen
                 if selected_option_ids == correct_option_ids:
                     score += 1
 
@@ -217,6 +218,92 @@ def submit_exam(request, exam_id):
         )
 
         return Response({'message': 'Exam submitted successfully.', 'score': score}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_results(request, exam_id):
+    user = request.user
+
+    try:
+        # Check access rights
+        if user.role == 'college_admin':
+            exam = get_object_or_404(Exam, id=exam_id, created_by=user.college_admin_profile)
+            results = Result.objects.filter(of_exam=exam)
+        elif user.role == 'student':
+            exam = get_object_or_404(Exam, id=exam_id, created_by=user.student_profile.college_admin)
+            results = Result.objects.filter(of_exam=exam, of_student=user.student_profile)
+        else:
+            return Response({'error': 'Invalid role.'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Check if the exam has finished
+        current_time = timezone.now()
+        exam_end_time = exam.scheduled_at + timezone.timedelta(minutes=exam.duration_in_minutes)
+        if current_time <= exam_end_time:
+            return Response({'error': 'Results can only be accessed after the exam has finished.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        results_data = [{
+            'student_id': result.of_student.id,
+            'username': result.of_student.user.username,
+            'email': result.of_student.user.email,
+            'student_name': f"{result.of_student.user.first_name} {result.of_student.user.last_name}",
+            'score': result.score,
+        } for result in results]
+
+        return Response({'results': results_data, 'total':exam.questions.count()}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_responses(request, exam_id, student_id):
+    user = request.user
+
+    try:
+        # Check access permissions
+        if user.role == 'college_admin':
+            exam = get_object_or_404(Exam, id=exam_id, created_by=user.college_admin_profile)
+            student = get_object_or_404(Student, id=student_id, college_admin=user.college_admin_profile)
+        elif user.role == 'student':
+            exam = get_object_or_404(Exam, id=exam_id, created_by=user.student_profile.college_admin)
+            student = get_object_or_404(Student, id=student_id, college_admin=user.student_profile.college_admin)
+        else:
+            return Response({'error': 'Invalid role.'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Check if the exam has finished
+        current_time = timezone.now()
+        exam_end_time = exam.scheduled_at + timezone.timedelta(minutes=exam.duration_in_minutes)
+        if current_time <= exam_end_time:
+            return Response({'error': 'Results can only be accessed after the exam has finished.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Fetch student responses for the exam
+        student_responses = StudentResponse.objects.filter(
+            selected_option__of_question__of_exam=exam,
+            of_student=student
+        ).select_related('selected_option', 'selected_option__of_question')
+
+        # Prepare response data
+        response_data = {}
+        questions = exam.questions.all()
+
+        for question in questions:
+            selected_options = student_responses.filter(selected_option__of_question=question)
+            selected_option_ids = [response.selected_option.id for response in selected_options]
+
+            response_data[question.id] = {
+                'question': question.question,
+                'options': [
+                    {
+                        'id': option.id,
+                        'text': option.option,
+                        'is_correct': option.is_correct,
+                        'is_selected': option.id in selected_option_ids
+                    }
+                    for option in question.options.all()
+                ]
+            }
+
+        return Response({'responses': response_data}, status=status.HTTP_200_OK)
 
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

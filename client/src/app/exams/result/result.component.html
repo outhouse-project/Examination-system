@@ -1,0 +1,10 @@
+<div class="results-container">
+    <h1>Results</h1>
+    <h3>{{ exam.title }}</h3>
+    <span><strong>{{exam.exam_type}} Mode</strong></span>
+    <span *ngIf="exam.is_AI_proctored"><strong>, AI-Proctored</strong></span><br>
+    <strong>Scheduled at: </strong>{{ exam.scheduled_at | date:'short' }}<br>
+    <strong>Duration: </strong>{{ exam.duration_in_minutes }} minutes
+
+    <router-outlet></router-outlet>
+</div>

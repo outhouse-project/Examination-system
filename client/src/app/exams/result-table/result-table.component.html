@@ -1,0 +1,38 @@
+<div>
+    <div *ngIf="isLoading" class="loading">
+        Loading results...
+    </div>
+
+    <div *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+    </div>
+
+    <table *ngIf="!isLoading && results.length > 0" class="results-table">
+        <thead>
+            <tr>
+                <th>Student Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Score</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let result of results">
+                <td>{{ result.username }}</td>
+                <td>{{ result.student_name }}</td>
+                <td>{{ result.email }}</td>
+                <td>{{ result.score+'/'+total }}</td>
+                <td>
+                    <a [routerLink]="['./', result.student_id]" class="view-link">
+                        View Responses
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="!isLoading && results.length === 0" class="no-results">
+        No results available for this exam.
+    </div>
+</div>

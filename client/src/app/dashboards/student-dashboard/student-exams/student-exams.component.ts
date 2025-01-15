@@ -8,7 +8,7 @@ import { ExamService } from '../../../exams/exam.service';
 @Component({
   selector: 'app-student-exams',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe],
+  imports: [CommonModule, DatePipe],
   templateUrl: './student-exams.component.html',
   styleUrl: './student-exams.component.css'
 })
@@ -27,6 +27,10 @@ export class StudentExamsComponent implements OnInit {
 
   canStartExam(scheduledTime: Date): boolean {
     return scheduledTime <= this.timeService.time()!;
+  }
+
+  isActiveOrUpcoming(endTime: Date): boolean {
+    return endTime > this.timeService.time()!;
   }
 
   startExam(exam: Exam): void {

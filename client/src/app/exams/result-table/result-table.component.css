@@ -1,0 +1,50 @@
+.loading {
+    color: #007bff;
+    font-size: 18px;
+}
+
+.error {
+    color: #dc3545;
+    font-size: 18px;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.results-table th,
+.results-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.results-table th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.results-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.results-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.no-results {
+    color: #6c757d;
+    font-size: 18px;
+}
+
+.view-link {
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.view-link:hover {
+    text-decoration: underline;
+}

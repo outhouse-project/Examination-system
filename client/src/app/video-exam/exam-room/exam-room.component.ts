@@ -5,6 +5,8 @@ import { ChatComponent } from '../chat/chat.component';
 import { ControlsComponent } from '../controls/controls.component';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
+import { Exam } from '../../exams/exam.interface';
+import { ExamService } from '../../exams/exam.service';
 
 interface RemoteStreamInfo {
   stream: MediaStream;
@@ -26,13 +28,21 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
   remoteStreams: RemoteStreamInfo[] = [];
   localStream!: MediaStream;
   socket!: WebSocket;
+  examData: Exam;
   @ViewChild(ChatComponent) chatComponent!: ChatComponent;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private examService: ExamService) {
+    this.examData = examService.getDefaultExam();
     this.peer = new Peer(this.authService.user()?.username!);
   }
 
   ngOnInit() {
+    this.examService.getExamById(this.roomId).subscribe({
+      next: (data: any) => {
+        this.examData = data.exam;
+      },
+      error: (err) => { }
+    });
     this.setupPeer();
   }
 
