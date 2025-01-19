@@ -48,6 +48,11 @@ def get_exam_details(request, exam_id):
             exam = get_object_or_404(Exam, id=exam_id, created_by=user.college_admin_profile)
         elif user.role == 'student':
             exam = get_object_or_404(Exam, id=exam_id, created_by=user.student_profile.college_admin)
+
+            current_time = timezone.now()
+            if current_time < exam.scheduled_at:
+                return Response({'error': 'The exam has not started yet.'}, status=status.HTTP_400_BAD_REQUEST)
+
         else:
             return Response({'error': 'Invalid role.'}, status=status.HTTP_403_FORBIDDEN)
 

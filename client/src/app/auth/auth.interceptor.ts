@@ -1,17 +1,20 @@
 import { HttpInterceptorFn } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { DataService } from "../data.service";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-    const csrfToken = getCsrfTokenFromCookies();
-    req = req.clone({
-        withCredentials: true,
-        setHeaders: {
-            'x-csrftoken': csrfToken
-        }
-    });
-    return next(req);
-}
+    const dataService = inject(DataService);
 
-function getCsrfTokenFromCookies(): string {
-    const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
-    return csrfCookie ? csrfCookie.split('=')[1] : '';
+    let clonedRequest = req.clone({ withCredentials: true });
+
+    if (req.method !== 'GET') {
+        let csrfToken = dataService.getData('csrftoken') || '';
+        clonedRequest = clonedRequest.clone({
+            setHeaders: {
+                'x-csrftoken': csrfToken,
+            },
+        });
+    }
+
+    return next(clonedRequest);
 }

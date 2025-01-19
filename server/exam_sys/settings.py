@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +28,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'o58a5e8-#dh-ecY5d27Bco8*ngo-ns
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] + os.environ.get('ALLOWED_HOSTS', '').split()
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] + os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 
 # Application definition
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,7 +56,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -72,12 +74,6 @@ LOGOUT_REDIRECT_URL = '/accounts/logout/'
 ROOT_URLCONF = 'exam_sys.urls'
 
 CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:4200').split(',')
-CSRF_TRUSTED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:4200').split(',')
-CSRF_COOKIE_SECURE = not DEBUG
-if not DEBUG:
-    CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_HTTPONLY = not DEBUG
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'content-type',
@@ -85,6 +81,16 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'access-control-allow-credentials',
 ]
+
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = not DEBUG
+if not DEBUG:
+    CSRF_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SAMESITE = CSRF_COOKIE_SAMESITE
+
+SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE
+SESSION_COOKIE_HTTPONLY = CSRF_COOKIE_HTTPONLY
 
 TEMPLATES = [
     {
@@ -112,12 +118,11 @@ CHANNEL_LAYERS = {
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+import dj_database_url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DB_URL', 'sqlite:///db.sqlite3')
+    )
 }
 
 

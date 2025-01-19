@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
+from django.middleware.csrf import get_token
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser, CollegeAdmin, Student
@@ -201,3 +202,11 @@ def get_students(request):
 def logout_user(request):
     logout(request)
     return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@login_required
+def get_csrf_token(request):
+    try:
+        return Response({'csrftoken': get_token(request)}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

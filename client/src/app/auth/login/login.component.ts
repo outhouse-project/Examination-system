@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
+import { DataService } from '../../data.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent {
     private http: HttpClient,
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private dataService: DataService
   ) {
     this.loginForm = this.fb.group({
       username_or_email: ['', Validators.required],
@@ -38,6 +40,11 @@ export class LoginComponent {
         next: (response: any) => {
           const user = response.user;
           this.authService.user.set(user);
+          this.http.get(environment.baseURL + 'accounts/get-csrf-token/').subscribe({
+            next: (data: any) => {
+              this.dataService.setData('csrftoken', data.csrftoken);
+            }
+          });
           this.routeToDashboard(user.role);
         },
         error: (err: any) => {
