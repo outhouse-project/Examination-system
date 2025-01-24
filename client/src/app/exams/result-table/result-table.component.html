@@ -1,4 +1,5 @@
 <div>
+    <h2>Result</h2>
     <div *ngIf="isLoading" class="loading">
         Loading results...
     </div>
@@ -21,10 +22,10 @@
             <tr *ngFor="let result of results">
                 <td>{{ result.username }}</td>
                 <td>{{ result.student_name }}</td>
-                <td>{{ result.email }}</td>
+                <td>{{ result.student_email }}</td>
                 <td>{{ result.score+'/'+total }}</td>
                 <td>
-                    <a [routerLink]="['./', result.student_id]" class="view-link">
+                    <a (click)="viewResponses(result)" class="view-link">
                         View Responses
                     </a>
                 </td>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ExamService } from '../../exams/exam.service';
 import { CommonModule } from '@angular/common';
+import { DataService } from '../../data.service';
 
 interface Responses {
   question: string,
@@ -23,11 +24,14 @@ interface Responses {
 })
 export class ResponsesComponent implements OnInit {
   responses: { [questionId: string]: Responses } = {};
+  result: any;
   totalScore = 0;
   isLoading = true;
   errorMessage = '';
 
-  constructor(private route: ActivatedRoute, private examService: ExamService) { }
+  constructor(private route: ActivatedRoute, private examService: ExamService, private dataService: DataService) {
+    this.result = this.dataService.getData('result');
+  }
 
   ngOnInit(): void {
     this.fetchResponses();

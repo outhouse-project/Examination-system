@@ -6,11 +6,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TimeService } from '../../time.service';
 import { MCQ } from '../mcq.interface';
+import { AIProctorComponent } from '../../ai-proctor/ai-proctor.component';
 
 @Component({
   selector: 'app-attempt-mcq',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, AIProctorComponent],
   templateUrl: './attempt-mcq.component.html',
   styleUrl: './attempt-mcq.component.css'
 })

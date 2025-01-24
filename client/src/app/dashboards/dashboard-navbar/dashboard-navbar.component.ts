@@ -31,7 +31,7 @@ export class DashboardNavbarComponent {
     this.changePasswordForm = this.fb.group({
       old_password: ['', Validators.required],
       new_password: ['', [Validators.required,
-        //  Validators.minLength(6)
+         Validators.minLength(6)
       ]],
       confirm_password: ['', Validators.required]
     }, { validators: this.passwordsMatchValidator });

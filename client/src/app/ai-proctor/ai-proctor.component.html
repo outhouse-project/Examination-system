@@ -1,0 +1,14 @@
+<!-- Overlay to block the whole page -->
+<div class="overlay" *ngIf="isPermissionBlocked">
+    <div class="permission-message">
+        <h2>Camera & Microphone Access Required</h2>
+        <p>Please allow camera & microphone access to proceed.</p>
+    </div>
+</div>
+
+<div class="video-container" *ngIf="isVideoVisible" #videoContainer (mousedown)="onDragStart($event)"
+    (document:mousemove)="onDragging($event)" (document:mouseup)="onDragEnd()">
+    <video [srcObject]="stream" autoplay [muted]="true" playsinline class="proctor-video-feed"></video>
+    <div class="proctor-message">AI proctor running...</div>
+</div>
+<button class="toggle-button" (click)="toggleVideo()">{{ isVideoVisible ? 'Hide ' : 'Show ' }}Proctor Feed</button>

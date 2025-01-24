@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExamService } from '../exam.service';
 import { CommonModule } from '@angular/common';
+import { DataService } from '../../data.service';
 
 @Component({
   selector: 'app-result-table',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './result-table.component.html',
   styleUrl: './result-table.component.css'
 })
@@ -16,7 +17,8 @@ export class ResultTableComponent implements OnInit {
   isLoading = true;
   total = 0;
 
-  constructor(private route: ActivatedRoute, private examService: ExamService) { }
+  constructor(private router: Router, private route: ActivatedRoute,
+    private examService: ExamService, private dataService: DataService) { }
 
   ngOnInit(): void {
     this.fetchResults();
@@ -35,5 +37,10 @@ export class ResultTableComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  viewResponses(result: any) {
+    this.dataService.setData('result', result);
+    this.router.navigate([result.student_id], { relativeTo: this.route });
   }
 }

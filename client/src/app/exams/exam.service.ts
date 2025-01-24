@@ -70,4 +70,12 @@ export class ExamService {
   getResponses(examId: string, studentId: string) {
     return this.http.get(environment.baseURL + `exams/get-responses/${examId}/${studentId}/`);
   }
+
+  createProctorAlert(examId: string, alertType: string) {
+    return this.http.post(environment.baseURL + `exams/new-alert/${examId}/`, { alertType });
+  }
+
+  getAlerts(examId: string, studentId: string) {
+    return this.http.get(environment.baseURL + `exams/get-alerts/${examId}/${studentId}/`);
+  }
 }

@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Exam, Question, Option, Result, StudentResponse, ProctoringAlert
-from accounts.models import CollegeAdmin, Student
+from accounts.models import Student
 from django.utils import timezone
 from rest_framework.generics import get_object_or_404
 
@@ -251,7 +251,7 @@ def get_results(request, exam_id):
         results_data = [{
             'student_id': result.of_student.id,
             'username': result.of_student.user.username,
-            'email': result.of_student.user.email,
+            'student_email': result.of_student.user.email,
             'student_name': f"{result.of_student.user.first_name} {result.of_student.user.last_name}",
             'score': result.score,
         } for result in results]
@@ -263,7 +263,6 @@ def get_results(request, exam_id):
 @api_view(['GET'])
 def get_responses(request, exam_id, student_id):
     user = request.user
-
     try:
         # Check access permissions
         if user.role == 'college_admin':
@@ -312,3 +311,4 @@ def get_responses(request, exam_id, student_id):
 
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+

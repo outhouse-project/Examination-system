@@ -14,3 +14,5 @@
 
 <app-chat [peer]="peer" [socket]="socket"></app-chat>
 <app-controls [stream]="localStream" [socket]="socket"></app-controls>
+<app-ai-proctor *ngIf="examData.is_AI_proctored && this.authService.user()?.role=='student'"
+    [examId]="examData.id"></app-ai-proctor>

@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
 import { Exam } from '../../exams/exam.interface';
 import { ExamService } from '../../exams/exam.service';
+import { AIProctorComponent } from '../../ai-proctor/ai-proctor.component';
 
 interface RemoteStreamInfo {
   stream: MediaStream;
@@ -18,7 +19,7 @@ interface RemoteStreamInfo {
 @Component({
   selector: 'app-exam-room',
   standalone: true,
-  imports: [CommonModule, ChatComponent, ControlsComponent],
+  imports: [CommonModule, ChatComponent, ControlsComponent, AIProctorComponent],
   templateUrl: './exam-room.component.html',
   styleUrls: ['./exam-room.component.css'],
 })
@@ -31,7 +32,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
   examData: Exam;
   @ViewChild(ChatComponent) chatComponent!: ChatComponent;
 
-  constructor(private authService: AuthService, private examService: ExamService) {
+  constructor(public authService: AuthService, private examService: ExamService) {
     this.examData = examService.getDefaultExam();
     this.peer = new Peer(this.authService.user()?.username!);
   }
@@ -120,5 +121,6 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.socket.close();
     this.peer.disconnect();
+    this.localStream?.getTracks().forEach(track => track.stop());
   }
 }

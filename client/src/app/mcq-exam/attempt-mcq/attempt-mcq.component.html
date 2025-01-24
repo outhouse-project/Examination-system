@@ -20,3 +20,4 @@
     <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 </div>
+<app-ai-proctor *ngIf="examData.is_AI_proctored" [examId]="examData.id"></app-ai-proctor>

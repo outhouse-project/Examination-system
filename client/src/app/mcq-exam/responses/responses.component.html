@@ -1,5 +1,10 @@
 <div class="container">
-    <h1>Exam Responses</h1>
+    <h2>Student Details</h2>
+    <strong>Username: </strong>{{ result.username }}<br>
+    <strong>Name: </strong>{{ result.student_name }}<br>
+    <strong>Email: </strong>{{ result.student_email }}
+
+    <h3>Exam Responses</h3>
 
     <div class="total-score">
         Total Score: {{ totalScore+'/'+questionCount }}

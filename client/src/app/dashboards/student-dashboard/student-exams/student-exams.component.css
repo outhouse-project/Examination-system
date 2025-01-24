@@ -1,12 +1,3 @@
-/* General Styling */
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-    margin: 0;
-    padding: 20px;
-}
-
 .exam-list {
     max-width: 800px;
     margin: 0 auto;
