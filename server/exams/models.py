@@ -22,7 +22,6 @@ class Exam(models.Model):
     def clean(self):
         if isinstance(self.scheduled_at, str):
             if self.scheduled_at <= timezone.now().isoformat():
-                print(timezone.now().isoformat())
                 raise ValidationError({"scheduled_at": "The exam must be scheduled in the future."})
         elif self.scheduled_at <= timezone.now():
             raise ValidationError({"scheduled_at": "The exam must be scheduled in the future."})

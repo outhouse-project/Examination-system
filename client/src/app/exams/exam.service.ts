@@ -72,7 +72,7 @@ export class ExamService {
   }
 
   createProctorAlert(examId: string, alertType: string) {
-    return this.http.post(environment.baseURL + `exams/new-alert/${examId}/`, { alertType });
+    return this.http.post(environment.baseURL + `exams/new-alert/${examId}/`, { 'alertType': alertType });
   }
 
   getAlerts(examId: string, studentId: string) {

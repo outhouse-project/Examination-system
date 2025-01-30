@@ -245,7 +245,7 @@ def get_results(request, exam_id):
         # Check if the exam has finished
         current_time = timezone.now()
         exam_end_time = exam.scheduled_at + timezone.timedelta(minutes=exam.duration_in_minutes)
-        if current_time <= exam_end_time:
+        if current_time < exam_end_time:
             return Response({'error': 'Results can only be accessed after the exam has finished.'}, status=status.HTTP_400_BAD_REQUEST)
 
         results_data = [{
@@ -277,7 +277,7 @@ def get_responses(request, exam_id, student_id):
         # Check if the exam has finished
         current_time = timezone.now()
         exam_end_time = exam.scheduled_at + timezone.timedelta(minutes=exam.duration_in_minutes)
-        if current_time <= exam_end_time:
+        if current_time < exam_end_time:
             return Response({'error': 'Results can only be accessed after the exam has finished.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Fetch student responses for the exam
@@ -312,3 +312,52 @@ def get_responses(request, exam_id, student_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+def new_alert(request, exam_id):
+    user = request.user
+    if user.role != 'student':
+        return Response({"error": "Only students can create alerts."}, status=status.HTTP_403_FORBIDDEN)
+
+    exam = get_object_or_404(Exam, id=exam_id, created_by=user.student_profile.college_admin)
+    try:
+        # Check if the exam is live
+        current_time = timezone.now()
+        exam_end_time = exam.scheduled_at + timezone.timedelta(minutes=exam.duration_in_minutes)
+        if current_time < exam.scheduled_at:
+            return Response({'error': 'The exam has not started yet.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if current_time > exam_end_time:
+            return Response({'error': 'The exam has already ended.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+        ProctoringAlert.objects.create(
+            of_student=user.student_profile,
+            of_exam=exam,
+            alert_type=request.data.get('alertType')
+        )
+        return Response({"message": "Alert created successfully."}, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_alerts(request, exam_id, student_id):
+    user = request.user
+    if user.role != 'college_admin':
+        return Response({'error': 'Only college admins can view proctoring alerts.'}, status=status.HTTP_403_FORBIDDEN)
+
+    exam = get_object_or_404(Exam, id=exam_id, created_by=user.college_admin_profile)
+    student = get_object_or_404(Student, id=student_id, college_admin=user.college_admin_profile)
+
+    try:
+        # Fetch all alerts for the specified exam and student
+        alerts = ProctoringAlert.objects.filter(of_exam=exam, of_student=student).order_by('timestamp')
+
+        # Prepare the response data
+        alerts_data = [{
+            'id': alert.id,
+            'alert_type': alert.alert_type,
+            'timestamp': alert.timestamp,
+        } for alert in alerts]
+
+        return Response({'alerts': alerts_data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

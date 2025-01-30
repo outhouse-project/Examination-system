@@ -104,8 +104,14 @@ export class AIProctorComponent implements OnInit {
   }
 
   sendAlert(alertType: string) {
-    this.examService.createProctorAlert(this.examId, alertType);
-    alert(`${alertTypesMap[alertType]}. Action has been Recorded.`);
+    this.examService.createProctorAlert(this.examId, alertType).subscribe({
+      next: (data: any) => {
+        alert(`${alertTypesMap[alertType]}. Action has been Recorded.`);
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
 
   onDragStart(event: MouseEvent): void {
