@@ -8,8 +8,9 @@
             <span class="exam-title">{{ exam.title }}</span>
             <span *ngIf="exam.exam_type" class="exam-tag">{{ exam.exam_type }} Mode</span>
             <span *ngIf="exam.is_AI_proctored" class="exam-tag ai-proctored">AI Proctored</span>
-            <button (click)="viewResult(exam)" *ngIf="exam.exam_type=='MCQ'" [disabled]=" !canViewResult(exam.endTime)"
-                class="result-button">
+            <button (click)="viewResult(exam)"
+                *ngIf="this.authService.user()?.role=='college_admin' || exam.exam_type=='MCQ'"
+                [disabled]="!canViewResult(exam.endTime)" class="result-button">
                 View Result
             </button>
         </div>

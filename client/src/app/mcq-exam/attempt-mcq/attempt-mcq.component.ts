@@ -80,7 +80,6 @@ export class AttemptMcqComponent {
     this.isSubmitting = true;
     this.errorMessage = '';
     this.successMessage = '';
-    console.log(this.preparePayload());
     this.examService.submitExam(this.examData.id, this.preparePayload()).subscribe({
       next: () => {
         this.successMessage = 'Exam submitted successfully!';

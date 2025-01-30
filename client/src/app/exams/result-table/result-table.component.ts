@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ExamService } from '../exam.service';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../data.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-result-table',
@@ -17,8 +18,8 @@ export class ResultTableComponent implements OnInit {
   isLoading = true;
   total = 0;
 
-  constructor(private router: Router, private route: ActivatedRoute,
-    private examService: ExamService, private dataService: DataService) { }
+  constructor(private router: Router, private route: ActivatedRoute, public authService: AuthService,
+    private examService: ExamService, public dataService: DataService) { }
 
   ngOnInit(): void {
     this.fetchResults();
@@ -42,5 +43,10 @@ export class ResultTableComponent implements OnInit {
   viewResponses(result: any) {
     this.dataService.setData('result', result);
     this.router.navigate([result.student_id], { relativeTo: this.route });
+  }
+
+  viewAlerts(result: any) {
+    this.dataService.setData('result', result);
+    this.router.navigate([result.student_id, 'proctor-alerts'], { relativeTo: this.route });
   }
 }

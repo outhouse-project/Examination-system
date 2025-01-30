@@ -23,11 +23,16 @@
                 <td>{{ result.username }}</td>
                 <td>{{ result.student_name }}</td>
                 <td>{{ result.student_email }}</td>
-                <td>{{ result.score+'/'+total }}</td>
+                <td>{{ result.score==null ? 'NA' : result.score+'/'+total }}</td>
                 <td>
-                    <a (click)="viewResponses(result)" class="view-link">
+                    <button (click)="viewResponses(result)" class="view-link"
+                        *ngIf="this.dataService.getData('exam').exam_type=='MCQ'">
                         View Responses
-                    </a>
+                    </button>
+                    <button (click)="viewAlerts(result)" class="view-link"
+                        *ngIf="this.dataService.getData('exam').is_AI_proctored && this.authService.user()?.role=='college_admin'">
+                        View AI-Proctor Alerts
+                    </button>
                 </td>
             </tr>
         </tbody>

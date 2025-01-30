@@ -5,6 +5,7 @@ import { TimeService } from '../../time.service';
 import { ExamService } from '../exam.service';
 import { Exam } from '../exam.interface';
 import { DataService } from '../../data.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-past-exams',
@@ -18,7 +19,7 @@ export class PastExamsComponent implements OnInit {
   currentTime: Date = new Date();
 
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService,
-    private timeService: TimeService, private examService: ExamService) { }
+    public authService: AuthService, private timeService: TimeService, private examService: ExamService) { }
 
   ngOnInit(): void {
     this.examService.getExams().subscribe(res => {
@@ -31,9 +32,7 @@ export class PastExamsComponent implements OnInit {
   }
 
   viewResult(exam: Exam): void {
-    if (exam.exam_type == 'MCQ') {
-      this.dataService.setData('exam', exam);
-      this.router.navigate(['./', exam.id], { relativeTo: this.route });
-    }
+    this.dataService.setData('exam', exam);
+    this.router.navigate(['./', exam.id], { relativeTo: this.route });
   }
 }

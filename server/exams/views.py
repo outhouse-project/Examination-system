@@ -222,7 +222,7 @@ def submit_exam(request, exam_id):
             of_student=student
         )
 
-        return Response({'message': 'Exam submitted successfully.', 'score': score}, status=status.HTTP_200_OK)
+        return Response({'message': 'Exam submitted successfully.'}, status=status.HTTP_200_OK)
 
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -4,6 +4,8 @@ import * as tf from '@tensorflow/tfjs';
 import * as cocossd from '@tensorflow-models/coco-ssd';
 import { ExamService } from '../exams/exam.service';
 import { alertTypesMap } from './alert-types-map';
+import Swal from 'sweetalert2';
+
 declare var ImageCapture: any;
 
 @Component({
@@ -106,7 +108,11 @@ export class AIProctorComponent implements OnInit {
   sendAlert(alertType: string) {
     this.examService.createProctorAlert(this.examId, alertType).subscribe({
       next: (data: any) => {
-        alert(`${alertTypesMap[alertType]}. Action has been Recorded.`);
+        Swal.fire({
+          title: alertTypesMap[alertType],
+          text: 'Action has been Recorded.',
+          icon: 'warning'
+        });
       },
       error: (error) => {
         console.error(error);

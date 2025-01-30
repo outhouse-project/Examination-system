@@ -4,7 +4,6 @@ import { LoginComponent } from './auth/login/login.component';
 import { SuperAdminDashboardComponent } from './dashboards/super-admin-dashboard/super-admin-dashboard.component';
 import { CollegeAdminDashboardComponent } from './dashboards/college-admin-dashboard/college-admin-dashboard.component';
 import { StudentDashboardComponent } from './dashboards/student-dashboard/student-dashboard.component';
-import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { RoleGuard } from './auth/role.guard';
 import { authResolver } from './auth/auth.resolver';
 import { SuperAdminDefaultComponent } from './dashboards/super-admin-dashboard/super-admin-default/super-admin-default.component';
@@ -21,6 +20,8 @@ import { ResultComponent } from './exams/result/result.component';
 import { PastExamsComponent } from './exams/past-exams/past-exams.component';
 import { ResultTableComponent } from './exams/result-table/result-table.component';
 import { ResponsesComponent } from './mcq-exam/responses/responses.component';
+import { ProctorAlertsComponent } from './exams/proctor-alerts/proctor-alerts.component';
+import { PagenotfoundComponent } from './common/pagenotfound/pagenotfound.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -48,7 +49,8 @@ export const routes: Routes = [
                     {
                         path: 'results/:examId', component: ResultComponent, children: [
                             { path: '', pathMatch: 'full', component: ResultTableComponent },
-                            { path: ':studentId', component: ResponsesComponent }
+                            { path: ':studentId', component: ResponsesComponent },
+                            { path: ':studentId/proctor-alerts', component: ProctorAlertsComponent },
                         ]
                     }
                 ]

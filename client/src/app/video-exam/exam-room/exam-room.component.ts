@@ -122,5 +122,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     this.socket.close();
     this.peer.disconnect();
     this.localStream?.getTracks().forEach(track => track.stop());
+    if (this.authService.user()?.role == 'student')
+      this.examService.submitExam(this.examData.id, {}).subscribe();
   }
 }

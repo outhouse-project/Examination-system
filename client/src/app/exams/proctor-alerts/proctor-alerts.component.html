@@ -1,0 +1,36 @@
+<div class="alert-summary">
+    <h2>Student Details</h2>
+    <strong>Username: </strong>{{ result.username }}<br>
+    <strong>Name: </strong>{{ result.student_name }}<br>
+    <strong>Email: </strong>{{ result.student_email }}
+
+    <h3>Alert Summary</h3>
+    <table>
+        <tr>
+            <th>Type</th>
+            <td *ngFor="let type of alertCounts | keyvalue">{{ alertMessage[type.key] }}</td>
+        </tr>
+        <tr>
+            <th>Count</th>
+            <td *ngFor="let type of alertCounts | keyvalue">{{ type.value }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="alert-list">
+    <h3>All Alerts</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let alert of alerts">
+                <td>{{ alertMessage[alert.alert_type] }}</td>
+                <td>{{ alert.timestamp }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

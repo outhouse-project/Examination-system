@@ -38,13 +38,3 @@
     color: #6c757d;
     font-size: 18px;
 }
-
-.view-link {
-    color: #007bff;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.view-link:hover {
-    text-decoration: underline;
-}
