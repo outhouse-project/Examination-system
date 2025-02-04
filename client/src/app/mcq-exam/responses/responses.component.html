@@ -21,7 +21,7 @@
             </div>
 
             <div class="options-container">
-                <div *ngFor="let option of question.value.options" class="option" [class.correct]="option.is_correct"
+                <div *ngFor="let option of question.value.options" class="option" [class.correct]="option.is_correct" [class.incorrect] = "!option.is_correct"
                     [class.selected]="option.is_selected">
                     <span class="option-check">
                         <span *ngIf="option.is_correct">&check;</span>

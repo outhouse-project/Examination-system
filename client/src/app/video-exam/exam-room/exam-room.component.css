@@ -46,3 +46,39 @@
     transform: scale(1.02);
     transition: transform 0.3s ease, border-color 0.3s ease;
 }
+
+/* Exam details container */
+.exam-details {
+    background: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+/* Exam title */
+.exam-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Exam information */
+.exam-info {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.exam-info p {
+    margin: 8px 0;
+}
+
+/* Add icon styling */
+.exam-info strong {
+    color: #222;
+    font-weight: bold;
+}

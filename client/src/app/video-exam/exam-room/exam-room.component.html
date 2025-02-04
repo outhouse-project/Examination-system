@@ -1,6 +1,11 @@
-<h2>{{ examData.title }}</h2>
-<p><strong>Instructions:</strong> {{ examData.instructions }}</p>
-<p><strong>Duration:</strong> {{ examData.duration_in_minutes }} minutes</p>
+<div class="exam-details">
+    <h2 class="exam-title">{{ examData.title }}</h2>
+    <div class="exam-info">
+        <p><strong>📜 Instructions:</strong> {{ examData.instructions }}</p>
+        <p><strong>⏳ Duration:</strong> {{ examData.duration_in_minutes }} minutes</p>
+    </div>
+</div>
+
 <div class="video-grid">
     <div *ngIf="localStream" class="video-container">
         <video [srcObject]="localStream" autoplay [muted]="true" playsinline></video>

@@ -1,10 +1,13 @@
 .chat-container {
-    border: 1px solid #ccc;
-    padding: 10px;
     max-width: 400px;
-    height: 300px;
+    height: 400px;
     display: flex;
     flex-direction: column;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    backdrop-filter: blur(10px);
 }
 
 .messages {
@@ -12,18 +15,61 @@
     overflow-y: auto;
     padding: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f4f4f4;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    scroll-behavior: smooth;
+}
+
+.messages div {
+    background: #e3e3e3;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    width: fit-content;
+    max-width: 80%;
+}
+
+.messages div strong {
+    color: #333;
 }
 
 .message-input {
     display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .message-input input {
     flex: 1;
-    padding: 5px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background: #fff;
+    transition: 0.3s;
+}
+
+.message-input input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    outline: none;
 }
 
 .message-input button {
-    margin-left: 10px;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.message-input button:hover {
+    background: linear-gradient(45deg, #0056b3, #007bff);
+    transform: translateY(-2px);
 }
