@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-controls',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './controls.component.html',
   styleUrl: './controls.component.css'
 })

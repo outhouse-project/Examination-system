@@ -1,32 +1,112 @@
+/* Alert Summary Container */
 .alert-summary {
-    margin-bottom: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.alert-summary table {
-    width: 100%;
-    border-collapse: collapse;
+/* Headings */
+h2,
+h3 {
     text-align: center;
+    color: #2c3e50;
 }
 
-.alert-summary th,
-.alert-summary td {
-    padding: 10px;
-    border: 1px solid #ddd;
+h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
+h3 {
+    font-size: 20px;
+    margin-top: 15px;
+    color: #333;
+}
+
+/* Student Details */
+strong {
+    font-size: 16px;
+    color: #555;
+    display: block;
+    margin: 5px 0;
+}
+
+/* Tables */
+.alert-summary table,
 .alert-list table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    text-align: center;
+    margin-top: 15px;
+    border-radius: 8px ;
+    
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.alert-list th,
+/* Table Header */
+.alert-summary th,
+.alert-list th {
+    padding: 12px;
+    background: #3498db;
+    color: white;
+    border: 2px solid #c7bebe85;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Table Rows */
+.alert-summary td,
 .alert-list td {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 2px solid #c7bebe85;
+    text-align: center;
+    font-size: 16px;
+    color: #587a9c;
 }
 
-.alert-list th {
-    background-color: #f4f4f4;
+/* Alternating Row Colors */
+.alert-summary tr:nth-child(even),
+.alert-list tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.alert-summary tr:nth-child(odd),
+.alert-list tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+/* Hover Effect */
+.alert-summary tr:hover,
+.alert-list tr:hover {
+    background: #ecf0f1;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Alert List Container */
+.alert-list {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .alert-summary, .alert-list {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .alert-summary table,
+    .alert-list table {
+        font-size: 14px;
+    }
 }

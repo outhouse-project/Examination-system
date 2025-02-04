@@ -1,5 +1,126 @@
 .results-container {
-    margin: 0 auto;
-    max-width: 800px;
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.results-container h2 {
+    font-size: 26px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.results-container h3 {
+    font-size: 22px;
+    color: #2980b9;
+    margin-bottom: 10px;
+}
+
+.results-container span {
+    font-size: 16px;
+    color: #333;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.results-container strong {
+    color: #2c3e50;
+}
+
+.exam-info {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #555;
+}
+
+.exam-info strong {
+    font-weight: 600;
+    color: #34495e;
+}
+
+/* Table Styling */
+.results-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.results-table th,
+.results-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+}
+
+.results-table th {
+    background: #2980b9;
+    color: white;
+    font-weight: bold;
+}
+
+.results-table tr:hover {
+    background: #f5f5f5;
+}
+
+.results-table td {
+    color: #333;
+}
+
+/* Button Styling */
+.primary-btn {
+    display: inline-block;
+    padding: 12px 18px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #2980b9;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.primary-btn:hover {
+    background: #1c6ea4;
+    transform: scale(1.05);
+}
+
+.primary-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .results-container {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    .results-container h2 {
+        font-size: 22px;
+    }
+
+    .results-container h3 {
+        font-size: 18px;
+    }
+
+    .results-table th,
+    .results-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .primary-btn {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
 }
