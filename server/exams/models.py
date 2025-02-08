@@ -60,7 +60,7 @@ class ProctoringAlert(models.Model):
         ('multiple_faces', 'Multiple Faces Detected'),
         ('mobile_use', 'Mobile Use Detected'),
         ('book_detected', 'Book Detected'),
-        # ('suspicious_movement', 'Suspicious Movement Detected'),
+        ('looking_away', 'Suspicious Movement Detected'),
         # ('screen_change', 'Screen Activity Detected'),
     )
     alert_type = models.CharField(max_length=20, choices=ALERT_TYPE_CHOICES)

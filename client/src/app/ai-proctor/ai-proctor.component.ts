@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import * as tf from '@tensorflow/tfjs';
-import * as cocossd from '@tensorflow-models/coco-ssd';
+import { FilesetResolver, FaceLandmarker, ObjectDetector } from '@mediapipe/tasks-vision';
 import { ExamService } from '../exams/exam.service';
 import { alertTypesMap } from './alert-types-map';
 import Swal from 'sweetalert2';
@@ -20,9 +19,10 @@ export class AIProctorComponent implements OnInit {
   isVideoVisible = true;
   isPermissionBlocked = true;
   stream!: MediaStream;
-  detectionInterval: any;
+  detectionLoop: any;
   @Input() examId = '';
-  private net!: cocossd.ObjectDetection;
+  private faceLandmarker!: FaceLandmarker;
+  private objectDetector!: ObjectDetector;
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
@@ -31,13 +31,35 @@ export class AIProctorComponent implements OnInit {
 
   ngOnInit(): void {
     this.requestVideoPermission();
-    this.loadModel();
+    this.initModels();
   }
 
-  async loadModel() {
-    await tf.setBackend('webgl'); // or use 'wasm' for better performance
-    await tf.ready();
-    this.net = await cocossd.load();
+  async initModels() {
+    const vision = await FilesetResolver.forVisionTasks(
+      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm'
+    );
+
+    // Initialize face landmarker
+    this.faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+        delegate: 'GPU'
+      },
+      outputFacialTransformationMatrixes: true,
+      runningMode: 'VIDEO',
+      numFaces: 1
+    });
+
+    // Initialize object detector
+    this.objectDetector = await ObjectDetector.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite',
+        delegate: 'GPU'
+      },
+      runningMode: 'VIDEO',
+      maxResults: 5,
+      scoreThreshold: 0.5
+    });
   }
 
   requestVideoPermission() {
@@ -63,55 +85,86 @@ export class AIProctorComponent implements OnInit {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
-    this.detectionInterval = setInterval(async () => {
+    this.detectionLoop = setInterval(async () => {
       try {
         const bitmap = await imageCapture.grabFrame();
         canvas.width = bitmap.width;
         canvas.height = bitmap.height;
         ctx?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
 
-        const detections = await this.net.detect(canvas);
-        this.checkObjects(detections);
+        const now = Date.now();
+        const detections = await Promise.all([
+          this.faceLandmarker.detectForVideo(canvas, now),
+          this.objectDetector.detectForVideo(canvas, now)
+        ]);
+        this.processDetections(detections[0], detections[1]);
       } catch (error) {
         console.error('Error capturing frame:', error);
       }
-    }, 1500);
+    }, 2000);
   }
 
-  checkObjects(detections: cocossd.DetectedObject[]) {
+  processDetections(faceResults: any, objectResults: any) {
     let personCount = 0;
-
-    if (detections.length < 1) {
-      this.sendAlert('face_absent');
-    }
-
-    detections.forEach((item) => {
-      const objectClass = item.class;
-
-      if (objectClass === 'cell phone') {
+    // Check for prohibited objects
+    objectResults.detections.forEach((detection: any) => {
+      const category = detection.categories[0].categoryName.toLowerCase();
+      if (category === 'person') {
+        personCount++;
+      }
+      if (category.includes('cell phone') || category.includes('mobile phone')) {
         this.sendAlert('mobile_use');
       }
-
-      if (objectClass === 'book') {
+      if (category.includes('book') || category.includes('notebook')) {
         this.sendAlert('book_detected');
       }
+    });
 
-      if (objectClass === 'person') {
-        personCount++;
-        if (personCount > 1) {
-          this.sendAlert('multiple_faces');
+    // Face presence checks
+    if (personCount > 1) {
+      this.sendAlert('multiple_faces');
+    } else if (personCount == 0) {
+      this.sendAlert('face_absent');
+    } else if (faceResults.facialTransformationMatrixes) {
+      if (faceResults.facialTransformationMatrixes.length == 0) {
+        this.sendAlert('face_absent');
+      } else {
+        // Head pose detection
+        const matrix = faceResults.facialTransformationMatrixes[0].data;
+        const angles = this.computeEulerAngles(matrix);
+        if (Math.abs(angles.yaw) > 18 || Math.abs(angles.pitch) > 18) {
+          this.sendAlert('looking_away');
         }
       }
-    });
+    }
+  }
+
+  private computeEulerAngles(matrix: number[]): { pitch: number, yaw: number, roll: number } {
+    const R = [
+      matrix[0], matrix[4], matrix[8],   // Rotation matrix rows
+      matrix[1], matrix[5], matrix[9],
+      matrix[2], matrix[6], matrix[10]
+    ];
+
+    // Calculate pitch (vertical head rotation)
+    const pitch = -Math.asin(R[2]) * 180 / Math.PI;
+
+    // Calculate yaw (horizontal head rotation)
+    const yaw = Math.atan2(R[1], R[0]) * 180 / Math.PI;
+
+    return {
+      pitch: Number(pitch.toFixed(1)),
+      yaw: Number(yaw.toFixed(1)),
+      roll: 0 // Roll not needed for this detection
+    };
   }
 
   sendAlert(alertType: string) {
     this.examService.createProctorAlert(this.examId, alertType).subscribe({
       next: (data: any) => {
         Swal.fire({
-          title: alertTypesMap[alertType],
-          text: 'Action has been Recorded.',
-          icon: 'warning'
+          title: alertTypesMap[alertType], text: 'Action has been Recorded.',
+          icon: 'warning', timer: 4000
         });
       },
       error: (error) => {
@@ -146,9 +199,9 @@ export class AIProctorComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    clearInterval(this.detectionInterval);
-    this.net?.dispose();
-    tf.disposeVariables();
+    clearInterval(this.detectionLoop);
+    this.faceLandmarker?.close();
+    this.objectDetector?.close();
     this.stream?.getTracks().forEach(track => track.stop());
   }
 }

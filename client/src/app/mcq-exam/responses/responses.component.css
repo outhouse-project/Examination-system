@@ -109,37 +109,24 @@ strong {
     background: #ffffff;
     transition: all 0.3s ease-in-out;
     font-size: 16px;
-    cursor: pointer;
-}
-
-.option:hover {
-    background-color: #ecf0f1;
 }
 
 /* Correct Answer */
 .option.correct {
     border-color: #28a745;
     color: #1a8332;
-    background: #d4edda;
-}
-
-/* Selected Answer */
-.option.selected {
-    background: #cce5ff;
-    border-color: #007bff;
-    color: #004085;
 }
 
 /* Correct & Selected */
 .option.correct.selected {
-    background: #d1ecf1;
-    border-color: #0c5460;
-    color: #0c5460;
+    border-color: #26a343;
+    color: #167d2e;
+    background: #d4edda;
 }
+
 .option.incorrect.selected {
-    background: #ed6d6d;
-    border-color: #0c5460;
-    color: #0c5460;
+    background: #f38d8d;
+    border-color: #ff5e5e;
 }
 
 /* Option Checkmark */

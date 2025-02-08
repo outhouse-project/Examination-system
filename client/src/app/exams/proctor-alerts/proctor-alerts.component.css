@@ -43,8 +43,8 @@ strong {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
-    border-radius: 8px ;
-    
+    border-radius: 8px;
+
     overflow: hidden;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
@@ -100,7 +100,9 @@ strong {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .alert-summary, .alert-list {
+
+    .alert-summary,
+    .alert-list {
         max-width: 100%;
         padding: 15px;
     }
