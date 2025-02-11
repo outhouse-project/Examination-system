@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'exams',
+    'analytics',
     'channels'
 ]
 

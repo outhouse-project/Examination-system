@@ -1,0 +1,50 @@
+.dashboard-container {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Statistics Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.card {
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    color: white;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.bg-blue {
+    background-color: #007bff;
+}
+
+.bg-green {
+    background-color: #28a745;
+}
+
+.bg-purple {
+    background-color: #6f42c1;
+}
+
+.bg-yellow {
+    background-color: #ffc107;
+}
+
+.bg-red {
+    background-color: #dc3545;
+}
+
+/* Chart Container */
+.chart-container {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}

@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@mediapipe/tasks-vision": "^0.10.21",
+    "@swimlane/ngx-charts": "^22.0.0-alpha.0",
     "peerjs": "^1.5.4",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.15.10",

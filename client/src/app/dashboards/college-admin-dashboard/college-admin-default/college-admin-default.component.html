@@ -1,1 +1,33 @@
 <h2>Welcome to the College Admin Dashboard!</h2>
+<div class="dashboard-container">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="card bg-blue">
+            <h4>Total Students</h4>
+            <p>{{ analytics?.total_students }}</p>
+        </div>
+        <div class="card bg-green">
+            <h4>Total Exams</h4>
+            <p>{{ analytics?.total_exams }}</p>
+        </div>
+        <div class="card bg-purple">
+            <h4>Past Exams</h4>
+            <p>{{ analytics?.past_exams }}</p>
+        </div>
+        <div class="card bg-yellow">
+            <h4>Upcoming Exams</h4>
+            <p>{{ analytics?.upcoming_exams }}</p>
+        </div>
+        <div class="card bg-red">
+            <h4>Average Student Score</h4>
+            <p>{{ analytics?.average_student_score }}/100</p>
+        </div>
+    </div>
+
+    <!-- Proctoring Alerts Chart -->
+    <div class="chart-container">
+        <h4>Proctoring Alerts</h4>
+        <ngx-charts-bar-vertical [results]="proctoringAlertsChart" [xAxis]="true" [yAxis]="true" [view]="[900, 350]">
+        </ngx-charts-bar-vertical>
+    </div>
+</div>

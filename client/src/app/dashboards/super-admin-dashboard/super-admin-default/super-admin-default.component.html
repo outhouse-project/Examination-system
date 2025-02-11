@@ -1,1 +1,42 @@
 <h2>Welcome to the Super Admin Dashboard!</h2>
+<div class="dashboard-container">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="card bg-blue">
+            <h4>Total College Admins</h4>
+            <p>{{ analytics?.total_college_admins }}</p>
+        </div>
+        <div class="card bg-red">
+            <h4>Total Students</h4>
+            <p>{{ analytics?.total_students }}</p>
+        </div>
+        <div class="card bg-green">
+            <h4>Total Exams</h4>
+            <p>{{ analytics?.total_exams }}</p>
+        </div>
+        <div class="card bg-purple">
+            <h4>Past Exams</h4>
+            <p>{{ analytics?.past_exams }}</p>
+        </div>
+        <div class="card bg-yellow">
+            <h4>Upcoming Exams</h4>
+            <p>{{ analytics?.upcoming_exams }}</p>
+        </div>
+    </div>
+
+    <div class="charts">
+        <!-- AI Proctored vs Regular Exams Pie Chart -->
+        <div class="chart-container">
+            <h4>Exam Type Distribution</h4>
+            <ngx-charts-pie-chart [results]="examTypeChart" [legend]="true" [labels]="true" [doughnut]="true"
+                [view]="[900, 350]"></ngx-charts-pie-chart>
+        </div>
+
+        <!-- Proctoring Alerts Bar Chart -->
+        <div class="chart-container">
+            <h4>Proctoring Alerts</h4>
+            <ngx-charts-bar-vertical [results]="proctoringAlertsChart" [xAxis]="true" [yAxis]="true"
+                [view]="[900, 350]"></ngx-charts-bar-vertical>
+        </div>
+    </div>
+</div>
