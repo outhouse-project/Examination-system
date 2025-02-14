@@ -18,6 +18,7 @@ export class AIProctorComponent implements OnInit {
   @ViewChild('videoContainer') videoContainer!: ElementRef;
   isVideoVisible = true;
   isPermissionBlocked = true;
+  isFullscreen = false;
   stream!: MediaStream;
   detectionLoop: any;
   @Input() examId = '';
@@ -26,12 +27,23 @@ export class AIProctorComponent implements OnInit {
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
+  private fullscreenChangeHandler = this.onFullscreenChange.bind(this);
 
   constructor(private examService: ExamService) { }
 
   ngOnInit(): void {
-    this.requestVideoPermission();
+    document.addEventListener('fullscreenchange', this.fullscreenChangeHandler);
+    this.requestPermission();
     this.initModels();
+  }
+
+  onFullscreenChange(): void {
+    if (document.fullscreenElement) {
+      this.isFullscreen = true;
+    } else {
+      this.isFullscreen = false;
+      this.sendAlert('fullscreen_exited');
+    }
   }
 
   async initModels() {
@@ -62,7 +74,7 @@ export class AIProctorComponent implements OnInit {
     });
   }
 
-  requestVideoPermission() {
+  requestPermission() {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
       this.stream = stream;
       this.isPermissionBlocked = false;
@@ -76,7 +88,11 @@ export class AIProctorComponent implements OnInit {
     }).catch(error => {
       console.error('Camera access denied or not available:', error);
       this.isPermissionBlocked = true;
-    })
+    });
+
+    document.documentElement.requestFullscreen().then(() => {
+      this.isFullscreen = true;
+    }).catch(error => this.isFullscreen = false);
   }
 
   startDetection() {
@@ -203,5 +219,6 @@ export class AIProctorComponent implements OnInit {
     this.faceLandmarker?.close();
     this.objectDetector?.close();
     this.stream?.getTracks().forEach(track => track.stop());
+    document.exitFullscreen().then(() => document.removeEventListener('fullscreenchange', this.fullscreenChangeHandler));
   }
 }

@@ -61,7 +61,7 @@ class ProctoringAlert(models.Model):
         ('mobile_use', 'Mobile Use Detected'),
         ('book_detected', 'Book Detected'),
         ('looking_away', 'Suspicious Movement Detected'),
-        # ('screen_change', 'Screen Activity Detected'),
+        ('fullscreen_exited', 'Fullscreen Exited'),
     )
     alert_type = models.CharField(max_length=20, choices=ALERT_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)

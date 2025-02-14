@@ -1,8 +1,8 @@
 <!-- Overlay to block the whole page -->
-<div class="overlay" *ngIf="isPermissionBlocked">
+<div class="overlay" *ngIf="isPermissionBlocked || !isFullscreen">
     <div class="permission-message">
-        <h2>Camera & Microphone Access Required</h2>
-        <p>Please allow camera & microphone access to proceed.</p>
+        <h2>Camera, Microphone & Fullscreen Access Required</h2>
+        <p>Please grant these permissions to proceed.</p>
     </div>
 </div>
 
