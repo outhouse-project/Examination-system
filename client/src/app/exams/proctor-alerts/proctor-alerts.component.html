@@ -17,6 +17,17 @@
     </table>
 </div>
 
+@if(recording){
+<h3>Exam Recording</h3>
+<video width="auto" controls>
+    <source [src]="recording.video_url" type="video/webm">
+    Your browser does not support the video tag.
+</video>
+}
+@else{
+<p>No recordings available.</p>
+}
+
 <div class="alert-list">
     <h3>All Alerts</h3>
     <table>

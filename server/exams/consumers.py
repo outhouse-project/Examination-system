@@ -2,6 +2,10 @@ import asyncio
 from django.utils import timezone
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from asgiref.sync import sync_to_async
+from django.conf import settings
+import aiofiles
+import os
 
 class CallConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -38,7 +42,7 @@ class CallConsumer(AsyncWebsocketConsumer):
                 }
             )
             await self.channel_layer.group_add(self.group_name, self.channel_name)
-        
+
         elif event_type=='chat':
             await self.channel_layer.group_send(self.group_name, {
                 'type': 'chat_message',
@@ -90,3 +94,37 @@ class TimeConsumer(AsyncWebsocketConsumer):
             current_time = timezone.now().isoformat()
             await self.send(json.dumps({"server_time": current_time}))
             await asyncio.sleep(40)
+
+class RecordingConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        if self.scope["user"].is_authenticated:
+            self.user_role = await sync_to_async(lambda: self.scope["user"].role)()
+            if self.user_role == "student":
+                self.user_id = await sync_to_async(lambda: self.scope["user"].student_profile.id)()
+                self.exam_id = self.scope['url_route']['kwargs']['exam_id']
+
+                # Define local recording file path
+                local_recording_path = os.path.join(settings.MEDIA_ROOT, f"recording_{self.exam_id}_{self.user_id}.webm")
+
+                # Ensure directory exists
+                os.makedirs(os.path.dirname(local_recording_path), exist_ok=True)
+
+                # Open file in append mode
+                self.file = await aiofiles.open(local_recording_path, "ab")
+
+                await self.accept()
+            else:
+                await self.close(code=4003)
+        else:
+            await self.close(code=4001)
+
+    async def receive(self, bytes_data):
+        try:
+            # Append received chunk to file asynchronously
+            await self.file.write(bytes_data)
+        except Exception as e:
+            await self.send(text_data=json.dumps({"error": str(e)}))
+
+    async def disconnect(self, close_code):
+        if hasattr(self, 'file'):
+            await self.file.close()  # Close the file when the student disconnects

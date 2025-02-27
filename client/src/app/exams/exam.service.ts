@@ -78,4 +78,8 @@ export class ExamService {
   getAlerts(examId: string, studentId: string) {
     return this.http.get(environment.baseURL + `exams/get-alerts/${examId}/${studentId}/`);
   }
+
+  getRecording(examId: string, studentId: string) {
+    return this.http.get(environment.baseURL + `exams/get-recording/${examId}/${studentId}/`);
+  }
 }

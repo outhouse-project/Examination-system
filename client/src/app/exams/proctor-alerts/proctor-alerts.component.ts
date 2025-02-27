@@ -17,16 +17,17 @@ export class ProctorAlertsComponent {
   alertCounts: { [key: string]: number } = {};
   result: any;
   alertMessage = alertTypesMap;
+  recording: any = null;
 
   constructor(private route: ActivatedRoute, private examService: ExamService, private dataService: DataService) {
     this.result = this.dataService.getData('result');
   }
 
   ngOnInit(): void {
-    this.fetchAlerts();
+    this.fetchAlertsAndRecording();
   }
 
-  fetchAlerts(): void {
+  fetchAlertsAndRecording(): void {
     const examId = this.route.parent?.snapshot.paramMap.get('examId')!;
     const studentId = this.route.snapshot.paramMap.get('studentId')!;
     this.examService.getAlerts(examId, studentId).subscribe({
@@ -38,6 +39,16 @@ export class ProctorAlertsComponent {
         console.error('Error fetching alerts:', error);
       }
     });
+
+    this.examService.getRecording(examId, studentId).subscribe({
+      next: (response: any) => {
+        console.log(response.video_url);
+        this.recording = response;
+      },
+      error: (error) => {
+        console.error('Error fetching recording:', error);
+      }
+    })
   }
 
   countAlerts(): void {
