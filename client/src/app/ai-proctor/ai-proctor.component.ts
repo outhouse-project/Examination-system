@@ -4,6 +4,8 @@ import { FilesetResolver, FaceLandmarker, ObjectDetector } from '@mediapipe/task
 import { ExamService } from '../exams/exam.service';
 import { alertTypesMap } from './alert-types-map';
 import Swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
 
 declare var ImageCapture: any;
 
@@ -28,11 +30,14 @@ export class AIProctorComponent implements OnInit {
   private offsetX = 0;
   private offsetY = 0;
   private fullscreenChangeHandler = this.onFullscreenChange.bind(this);
+  private mediaRecorder!: MediaRecorder;
+  private socket!: WebSocket;
 
-  constructor(private examService: ExamService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private examService: ExamService) { }
 
   ngOnInit(): void {
     document.addEventListener('fullscreenchange', this.fullscreenChangeHandler);
+    this.socket = new WebSocket(environment.baseURL.replace(/^http/, 'ws') + `ws/recording/${this.examId}/`);
     this.requestPermission();
     this.initModels();
   }
@@ -43,6 +48,7 @@ export class AIProctorComponent implements OnInit {
     } else {
       this.isFullscreen = false;
       this.sendAlert('fullscreen_exited');
+      this.router.navigate(['../../'], { relativeTo: this.route });
     }
   }
 
@@ -78,6 +84,7 @@ export class AIProctorComponent implements OnInit {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
       this.stream = stream;
       this.isPermissionBlocked = false;
+      this.startRecording();
       this.stream.getTracks().forEach(track => {
         track.onended = () => {
           this.isPermissionBlocked = true;
@@ -189,6 +196,21 @@ export class AIProctorComponent implements OnInit {
     });
   }
 
+  startRecording() {
+    this.mediaRecorder = new MediaRecorder(this.stream, { mimeType: 'video/webm; codecs=vp8' });
+    this.mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0 && this.socket) {
+        this.socket.send(event.data);
+      }
+    };
+    this.mediaRecorder.start(2000); // Send data every 2 seconds
+  }
+
+  stopRecording() {
+    this.mediaRecorder.stop();
+    this.socket?.close();
+  }
+
   onDragStart(event: MouseEvent): void {
     const container = this.videoContainer.nativeElement;
     this.isDragging = true;
@@ -219,6 +241,7 @@ export class AIProctorComponent implements OnInit {
     this.faceLandmarker?.close();
     this.objectDetector?.close();
     this.stream?.getTracks().forEach(track => track.stop());
+    this.stopRecording();
     document.exitFullscreen().then(() => document.removeEventListener('fullscreenchange', this.fullscreenChangeHandler));
   }
 }
