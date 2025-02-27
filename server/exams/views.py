@@ -5,6 +5,9 @@ from .models import Exam, Question, Option, Result, StudentResponse, ProctoringA
 from accounts.models import Student
 from django.utils import timezone
 from rest_framework.generics import get_object_or_404
+from django.conf import settings
+import os
+import concurrent.futures
 
 @api_view(['POST'])
 def create_exam(request):
@@ -222,6 +225,10 @@ def submit_exam(request, exam_id):
             of_student=student
         )
 
+        s3_key = f"recording_{exam.id}_{student.id}.webm"
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+        executor.submit(upload_to_s3, s3_key)
+
         return Response({'message': 'Exam submitted successfully.'}, status=status.HTTP_200_OK)
 
     except Exception as e:
@@ -361,3 +368,27 @@ def get_alerts(request, exam_id, student_id):
         return Response({'alerts': alerts_data}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_recording(request, exam_id, student_id):
+    user = request.user
+    if user.role != 'college_admin':
+        return Response({'error': 'Only college admins can view recording.'}, status=status.HTTP_403_FORBIDDEN)
+
+    exam = get_object_or_404(Exam, id=exam_id, created_by=user.college_admin_profile)
+    student = get_object_or_404(Student, id=student_id, college_admin=user.college_admin_profile)
+
+    try:
+        # Generate a pre-signed URL (valid for 1 hour)
+        presigned_url = settings.S3_CLIENT.generate_presigned_url(
+            "get_object", Params={"Bucket": os.environ.get('AWS_STORAGE_BUCKET_NAME'),
+            "Key": f"recording_{exam.id}_{student.id}.webm"}, ExpiresIn=3600
+        )
+        return Response({'video_url': presigned_url}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+def upload_to_s3(s3_key):
+    local_recording_path = os.path.join(settings.MEDIA_ROOT, s3_key)
+    settings.S3_CLIENT.upload_file(local_recording_path, os.environ.get('AWS_STORAGE_BUCKET_NAME'), s3_key)
+    os.remove(local_recording_path)  # Delete local file after successful upload
